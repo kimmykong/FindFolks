@@ -9,13 +9,26 @@
 {% if not message %}
 	<a href="/login">Login</a>
 	<a href="/register">Register</a>
+	<p> Interests </p>
+	<ul>
+		<li> <a href = "/interests/Sports"> Sports </a> </li>
+		<li> <a href = "/interests/Food"> Food </a> </li>
+		<li> <a href = "/interests/Music"> Music </a> </li>
+	</ul>
+	<p> Events </p>
+	<ul>
+		<li> <a href = "/events/211"> BaseballGame </a> </li>
+		<li> <a href = "/events/332"> Cheese Tasting </a> </li>
+		<li> <a href = "/events/999"> Hannah Montana Concert </a> </li>
+	</ul>
+
 {% endif %}
 
 {% if message %}
 	<a href="/logout">Logout</a>
 	<a href="/remove_account">Remove Account</a>
 	<p class="message">You are logged in {{message}}. You have {{num}} follower(s)</p> </br>
-	<a href="/tweets">View your tweets</a> </br>
+	<a href="/interests">View your tweets</a> </br>
 	<a href="/find_people">Find people to follow</a> </br>
 	<a href="/unfollow">Unfollow someone</a> </br>
 	<a href="/view_followed">View people you have followed</a> </br>
