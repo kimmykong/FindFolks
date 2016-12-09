@@ -1,0 +1,67 @@
+tasks
+
+1. PUBLICPAGE
+	a. display login
+	b. display random interests
+	c. display events within 3 days //time not that important
+2. LOGIN
+	a. password md5 hash
+	b. display if unsuccessful
+	c. if successful link to homepage
+3. HOMEPAGE
+	a. Error message if the previous action was not successful,
+	b. Some mechanism for the user to choose the use case she wants to execute.
+	   You may choose to provide links to other URLS that will present the
+	interfaces for other use cases, or you may include those interfaces directly
+	on the home page.
+	c. Any other information you’d like to include. For example, you might want to
+	include groups the user belongs to, events she’s signed up for, etc. on the
+	home page, or you may prefer to just show them when she does some of
+	the following use cases.
+
+CASES
+
+4. View My Upcoming Events: Provide various ways for the user to see upcoming
+events for which she has signed up. The default should be showing events for the
+current day and the next three days. Optionally you may include a way for the
+user to specify a range of dates, limit the display to events sponsored by
+particular groups, etc. In each case, the display should include the event_id, title, start_time, location_name, zipcode, and the name of sponsoring group.
+
+5. Sign up for an event: User chooses an event and signs up for the event. You may
+find it easier to implement this along with a use case to search for events. If the user has previously signed up for the event no additional action is needed (but FindFolks should not crash).
+
+6. Search for events of interest: ​Shows info (event_id, title, etc.) about upcoming events sponsored by groups that share an interest with this user. Optionally, youmay limit the date range and/or provide other ways for the user to search forevents that they might wish to attend. You might want to combine this with otherrelated use cases.
+
+7. Create an event​: If the user is authorized to do so, he or she creates a new
+event for a group, providing all the needed data, via forms. The application should prevent unauthorized users from doing this action.
+
+8. Rate an event​ that the user has signed up for and that has already take place.
+	a. Ratings are between 0 and 5 stars
+	b. Ratings cannot be done before the event starts
+	c. If a user tries to rate an event that they didn’t sign up for or that didn’t already start FindFolks should display an error message.
+
+9. See average ratings of all events (during last three days or, optionally, some
+specified date range) that were sponsored by groups to which this member
+belongs.
+
+10. See friends’ events: Displays a list of upcoming events for which any of the
+member’s friends are signed up. (Here, the current user X’s friends are people Y
+such that there is a tuple (friend_of, friend_to) = (X, Y) are in the friends
+relationship, i.e. people who have “friended” X.
+
+11.Logout: The session is destroyed and a “goodbye” page or the login page is
+displayed
+
+EXTRAS
+
+1.
+
+2.
+
+3.
+
+4.
+
+5.
+
+6.
