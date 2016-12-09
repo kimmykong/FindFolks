@@ -31,7 +31,6 @@ def login():
 def register():
     return render_template('register.html')
 
-
 # Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
 def loginAuth():
@@ -42,7 +41,7 @@ def loginAuth():
     # cursor used to send queries
     cursor = conn.cursor()
     # executes query
-    query = 'SELECT * FROM member WHERE username = %s and password = %s'
+    query = 'SELECT * FROM member WHERE username = %s and password = MD5(%s)'
     cursor.execute(query, (username, password))
     # stores the results in a variable
     data = cursor.fetchone()
@@ -85,8 +84,9 @@ def registerAuth():
         error = "This user already exists"
         return render_template('register.html', error=error)
     else:
-        # zipcode should probs be diff
-        ins = 'INSERT INTO member VALUES(%s, %s, %s, %s, %s, %s)'
+        # TODO: zipcode should probs be diff
+
+        ins = 'INSERT INTO member VALUES(%s, MD5(%s), %s, %s, %s, %s)'
         cursor.execute(ins, (username, password, firstname,lastname,email,zipcode))
         conn.commit()
         cursor.close()

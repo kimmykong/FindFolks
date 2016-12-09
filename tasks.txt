@@ -5,9 +5,9 @@ tasks
 	b. display random interests
 	c. display events within 3 days //time not that important
 2. LOGIN
-	a. password md5 hash
-	b. display if unsuccessful
-	c. if successful link to homepage
+	DONE a. password md5 hash
+	DONE b. display if unsuccessful
+	DONE c. if successful link to homepage
 3. HOMEPAGE
 	a. Error message if the previous action was not successful,
 	b. Some mechanism for the user to choose the use case she wants to execute.
