@@ -17,14 +17,17 @@
 	</ul>
 	<p> Events </p>
 	<ul>
-		<li> <a href = "/events/211"> BaseballGame </a> </li>
+		{%for line in event %}
+			<li> <a href = "/events/211"> {{line.title}} </a> </li>
+		{% endfor %}
+<!-- 		<li> <a href = "/events/211"> BaseballGame </a> </li>
 		<li> <a href = "/events/332"> Cheese Tasting </a> </li>
-		<li> <a href = "/events/999"> Hannah Montana Concert </a> </li>
+		<li> <a href = "/events/999"> Hannah Montana Concert </a> </li> -->
 	</ul>
 
 {% endif %}
 
-{% if message %}
+<!--{% if message %}
 	<a href="/logout">Logout</a>
 	<a href="/remove_account">Remove Account</a>
 	<p class="message">You are logged in {{message}}. You have {{num}} follower(s)</p> </br>
@@ -40,7 +43,7 @@
 	        <p>{{line}}</p>
 	        <hr>
 	{% endfor %}
-	{% endif %}
+	{% endif %} -->
 </body>
 
 </html>
