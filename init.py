@@ -8,21 +8,27 @@ app = Flask(__name__)
 # Configure MySQL
 conn = pymysql.connect(host='localhost',
                        user='root',
-                       # password='root',
+                       password='root',
                        db='findfolks',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
 
+
 # Define a route to hello function
 @app.route('/')
 def hello():
-    return renderIndexPage()
-
+    cursor = conn.cursor()
+    query = 'SELECT title FROM an_event'
+    cursor.execute(query)
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template('index.html', event = data)
 
 # Define route for login
 @app.route('/login')
 def login():
     return render_template('login.html')
+
 
 # Define route for register
 @app.route('/register')
@@ -56,6 +62,7 @@ def loginAuth():
         error = 'Invalid login or username'
         return render_template('login.html', error=error)
 
+
 # Authenticates the register
 @app.route('/registerAuth', methods=['GET', 'POST'])
 def registerAuth():
@@ -87,47 +94,28 @@ def registerAuth():
         cursor.execute(ins, (username, password, firstname,lastname,email,zipcode))
         conn.commit()
         cursor.close()
-        return renderIndexPage()
-
-def renderIndexPage():
-    cursor = conn.cursor()
-
-    query = 'SELECT * FROM interest'
-    cursor.execute(query)
-    interests = cursor.fetchall()
-
-    query = 'SELECT title FROM an_event'
-    cursor.execute(query)
-    events = cursor.fetchall()
-
-    cursor.close()
-    return render_template('index.html', interests=interests, event=events)
+        return render_template('index.html')
 
 
 @app.route('/home')
 def home():
     username = session['username']
-    return render_template('home.html', username=username)
-
-
-@app.route('/sandbox')
-def sandbox():
-    cursor = conn.cursor()
-
-    query = 'SELECT * FROM interest'
-    cursor.execute(query)
+    cursor = conn.cursor();
+    query = 'SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() < an_event.start_time < DATE_ADD(NOW(),INTERVAL 3 DAY)' 
+    cursor.execute(query, (username))
     data = cursor.fetchall()
-
     cursor.close()
-    return render_template('sandbox.html', data=data)
 
-@app.route('/sandbox2', methods=['GET'])
-def interest():
+    # query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
+    # cursor.execute(quersy, (username))
+    # data = cursor.fetchall()
+    # cursor.close()
 
-    # username = request.form['username']
-    # catName = request.table
-    print request.table
-    print "here"
+    return render_template('home.html', username=username, event = data) 
+
+    
+
+
 
 # @app.route('/post', methods=['GET', 'POST'])
 # def post():
@@ -148,7 +136,7 @@ def logout():
 
 
 app.secret_key = 'some key that you will never guess'
-# Run the app on localhost port 5000
+# Run the app on localhost port 5007
 # debug = True -> you don't have to restart flask
 # for changes to go through, TURN OFF FOR PRODUCTION
 if __name__ == "__main__":
