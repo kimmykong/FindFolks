@@ -2,11 +2,9 @@
 <html>
 
 <head>
-
 </head>
 
 <body>
-{% if not message %}
 	<a href="/login">Login</a>
 	<a href="/register">Register</a>
 	<p> Interests </p>
@@ -20,30 +18,22 @@
 		{%for line in event %}
 			<li> <a href = "/events/211"> {{line.title}} </a> </li>
 		{% endfor %}
-<!-- 		<li> <a href = "/events/211"> BaseballGame </a> </li>
-		<li> <a href = "/events/332"> Cheese Tasting </a> </li>
-		<li> <a href = "/events/999"> Hannah Montana Concert </a> </li> -->
 	</ul>
 
-{% endif %}
+	<p> Interests </p>
 
-<!--{% if message %}
-	<a href="/logout">Logout</a>
-	<a href="/remove_account">Remove Account</a>
-	<p class="message">You are logged in {{message}}. You have {{num}} follower(s)</p> </br>
-	<a href="/interests">View your tweets</a> </br>
-	<a href="/find_people">Find people to follow</a> </br>
-	<a href="/unfollow">Unfollow someone</a> </br>
-	<a href="/view_followed">View people you have followed</a> </br>
-	</br>
+	<table>
+		<th>Category</th>
+		<th>Keyword</th>
 
-        <h4>15 most recent tweets from you and your followers </h4> </br>
-
-	{% for line in tweets%}
-	        <p>{{line}}</p>
-	        <hr>
+	{% for line in interests %}
+		<tr>
+			<td><a href="/interest">{{line.category}}</a></td>
+			<td>{{line.keyword}}</td>
+		</tr>
 	{% endfor %}
-	{% endif %} -->
+	</table>
+
 </body>
 
 </html>
