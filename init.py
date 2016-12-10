@@ -136,15 +136,17 @@ def sandbox():
 @app.route('/interest/<categoryKeyword>', methods=['GET','POST'])
 def interest(categoryKeyword):
     catKey = str(categoryKeyword).split("+")
+    category = catKey[0] 
+    keyword = catKey[1]
     cursor = conn.cursor()
 
-    query = 'SELECT group.name FROM group JOIN about ON group.group_id = about.group_id WHERE aboout.category = catKey[0] AND about.keyword = catKey[1]'
+    query = 'SELECT a_group.group_name FROM a_group JOIN about ON a_group.group_id = about.group_id WHERE about.category = category AND about.keyword = keyword'
     cursor.execute(query)
     groups = cursor.fetchall()
 
     cursor.close()
 
-    return render_template('interest.html', category=catKey[0], keyword=catKey[1], groups = groups )
+    return render_template('interest.html', category= category, keyword= keyword, groups = groups )
 
 
 @app.route('/events/<id>', methods=['GET','POST'])
