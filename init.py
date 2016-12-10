@@ -101,6 +101,7 @@ def registerAuth():
 def home():
     username = session['username']
     cursor = conn.cursor();
+    # displays events in the next three days by default
     query = 'SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() < an_event.start_time < DATE_ADD(NOW(),INTERVAL 3 DAY)' 
     cursor.execute(query, (username))
     data = cursor.fetchall()
