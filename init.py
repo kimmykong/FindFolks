@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Configure MySQL
 conn = pymysql.connect(host='localhost',
                        user='root',
-                       # password='root',
+                       password='root',
                        db='findfolks',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
@@ -136,7 +136,15 @@ def sandbox():
 @app.route('/interest/<categoryKeyword>', methods=['GET','POST'])
 def interest(categoryKeyword):
     catKey = str(categoryKeyword).split("+")
-    return render_template('interest.html', category=catKey[0], keyword=catKey[1] )
+    cursor = conn.cursor()
+
+    query = 'SELECT group.name FROM group JOIN about ON group.group_id = about.group_id WHERE aboout.category = catKey[0] AND about.keyword = catKey[1]'
+    cursor.execute(query)
+    groups = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template('interest.html', category=catKey[0], keyword=catKey[1], groups = groups )
 
 
 # @app.route('/post', methods=['GET', 'POST'])
