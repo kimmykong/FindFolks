@@ -7,12 +7,6 @@
 <body>
 	<a href="/login">Login</a>
 	<a href="/register">Register</a>
-	<p> Interests </p>
-	<ul>
-		<li> <a href = "/interests/Sports"> Sports </a> </li>
-		<li> <a href = "/interests/Food"> Food </a> </li>
-		<li> <a href = "/interests/Music"> Music </a> </li>
-	</ul>
 	<p> Events </p>
 	<ul>
 		{%for line in event %}
@@ -28,7 +22,7 @@
 
 	{% for line in interests %}
 		<tr>
-			<td><a href="/interest">{{line.category}}</a></td>
+            <td><a href="/interest/{{line.category}}+{{line.keyword}}"> {{line.category}}</a></td>
 			<td>{{line.keyword}}</td>
 		</tr>
 	{% endfor %}

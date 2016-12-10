@@ -7,8 +7,6 @@ INSERT INTO `location` (`location_name`, `zipcode`, `address`, `description`, `l
 INSERT INTO `interest` (`category`, `keyword`) VALUES
 ('animals', 'puppies');
 INSERT INTO `member` (`username`, `password`, `firstname`, `lastname`, `email`, `zipcode`) VALUES
-('bitch', 'bitch', 'bitch', 'bitch', 'bitch@bitch.com', 90786),
-('bitch2.0', 'idgi', 'oldfashioned', 'chunk', 'ugly@nyu.edu', 90210),
 ('shayaansaiyed', '96a4cc498f0b9535bb7f44ffb65f9d2b', 'shayaan', 'saiyed', 'shayaan@saiyed.com', 11232),
 ('Taylor', '56c052be7cc218dbc1a4092a9db64c50', 'Taylor', 'Taylor', 'taylor@IllSue.com', 11111);
 INSERT INTO `an_event` (`event_id`, `title`, `description`, `start_time`, `end_time`, `location_name`, `zipcode`) VALUES
