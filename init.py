@@ -17,8 +17,12 @@ conn = pymysql.connect(host='localhost',
 # Define a route to hello function
 @app.route('/')
 def hello():
-    return render_template('index.html')
-
+    cursor = conn.cursor()
+    query = 'SELECT title FROM an_event'
+    cursor.execute(query)
+    data = cursor.fetchAll()
+    cursor.close()
+    return render_template('index.html', event = data)
 
 # Define route for login
 @app.route('/login')
@@ -107,6 +111,9 @@ def home():
 
     return render_template('home.html', username=username)
 
+    
+
+
 
 # @app.route('/post', methods=['GET', 'POST'])
 # def post():
@@ -127,8 +134,8 @@ def logout():
 
 
 app.secret_key = 'some key that you will never guess'
-# Run the app on localhost port 5000
+# Run the app on localhost port 5007
 # debug = True -> you don't have to restart flask
 # for changes to go through, TURN OFF FOR PRODUCTION
 if __name__ == "__main__":
-    app.run('127.0.0.1', 5000, debug=True)
+    app.run('127.0.0.1', 5007, debug=True)
