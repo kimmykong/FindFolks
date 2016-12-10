@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Configure MySQL
 conn = pymysql.connect(host='localhost',
                        user='root',
-                       password='root',
+                       # password='root',
                        db='findfolks',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
@@ -55,6 +55,21 @@ def loginAuth():
         # returns an error message to the html page
         error = 'Invalid login or username'
         return render_template('login.html', error=error)
+
+@app.route('/signup/<id>', methods=['GET', 'POST'])
+def signup(id):
+    cursor = conn.cursor()
+
+    query = 'SELECT * FROM an_event WHERE event_id = %s'
+    cursor.execute(query, (str(id)))
+    data = cursor.fetchone()
+
+    query = 'INSERT INTO sign_up VALUES (%s,%s, -1)'
+    cursor.execute(query, ((str(id)), str(session['username'])))
+    conn.commit()
+
+    cursor.close()
+    return render_template("event.html", event=data, signedup=True )
 
 # Authenticates the register
 @app.route('/registerAuth', methods=['GET', 'POST'])
@@ -103,24 +118,18 @@ def renderIndexPage():
     cursor.close()
     return render_template('index.html', interests=interests, event=events)
 
-
 @app.route('/home')
 def home():
     username = session['username']
     cursor = conn.cursor();
+
     # displays events in the next three days by default
     query = 'SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() < an_event.start_time < DATE_ADD(NOW(),INTERVAL 3 DAY)'
     cursor.execute(query, (username))
     data = cursor.fetchall()
     cursor.close()
 
-    # query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
-    # cursor.execute(quersy, (username))
-    # data = cursor.fetchall()
-    # cursor.close()
-
     return render_template('home.html', username=username, event=data)
-
 
 @app.route('/sandbox')
 def sandbox():
@@ -169,6 +178,22 @@ def eventPage(id):
 #     conn.commit()
 #     cursor.close()
 #     return redirect(url_for('home'))
+
+# Search for events with interest
+@app.route('/eventSearch', methods=['GET', 'POST'])
+def eventSearch():
+    username = session['username']
+    cursor = conn.cursor()
+    query = 'SELECT * FROM interested_in JOIN about ON interested_in.keyword = about.keyword JOIN organize ON about.group_id = organize.group_id JOIN an_event ON organize.event_id = an_event.event_id JOIN a_group ON about.group_id = a_group.group_id WHERE interested_in.username = %s'
+    cursor.execute(query, (username))
+    eventSearch = cursor.fetchall()
+    # displays events in the next three days by default
+    query = 'SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() < an_event.start_time < DATE_ADD(NOW(),INTERVAL 3 DAY)'
+    cursor.execute(query, (username))
+    futureEvents = cursor.fetchall()
+    cursor.close()
+    return render_template('home.html', username=username, eventSearch=eventSearch, button=True, event=futureEvents)
+
 
 
 @app.route('/logout')

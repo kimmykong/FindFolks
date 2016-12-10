@@ -14,8 +14,39 @@
 	}
 </style>
 
+
+<form action="/eventSearch" method="POST">
+	<input type="submit" value="Search for events">
+</form>
+{% if button %}
+	<table>
+		<th>Keyword</th>
+		<th>Category</th>
+		<th>Group Name</th>
+		<th>event-id</th>
+		<th>Title</th>
+		<th>Start Time</th>
+		<th>Location</th>
+		<th>Zipcode</th>
+
+	{% for line in eventSearch %}
+		<tr>
+			<td>{{line.keyword}}</td>
+			<td>{{line.category}}</td>
+			<td>{{line.group_name}}</td>
+			<td>{{line.event_id}}</td>
+			<td>{{line.title}}</td>
+			<td>{{line.start_time}}</td>
+			<td>{{line.location_name}}</td>
+			<td>{{line.zipcode}}</td>
+		</tr>
+	{% endfor %}
+	</table>
+{% endif %}
+
+<br>
+
 <table>
-	<th>event-id</th>
 	<th>Title</th>
 	<th>Start Time</th>
 	<th>Location</th>
@@ -23,8 +54,7 @@
 
 {% for line in event %}
 	<tr>
-		<td>{{line.event_id}}</td>
-		<td>{{line.title}}</td>
+		<td><a href = "/events/{{line.event_id}}"> {{line.title}} </a></td>
 		<td>{{line.start_time}}</td>
 		<td>{{line.location_name}}</td>
 		<td>{{line.zipcode}}</td>

@@ -20,8 +20,9 @@ INSERT INTO `sign_up` (`event_id`, `username`, `rating`) VALUES
 (332, 'shayaansaiyed', 5),
 (412, 'shayaansaiyed', 6);
 
-INSERT INTO `about` (`category`, `keyword`, `group_id`) VALUES
-('crafts', 'knitting', 8675);
+INSERT INTO `member` (`username`, `password`, `firstname`, `lastname`, `email`, `zipcode`) VALUES
+('osermay', 'fd9699a989bacbc3ece9cfe8e3f6cbca', 'Kristin', 'Moser', 'krisemoser@gmail.com', 11232);
+
 
 INSERT INTO `a_group` (`group_id`, `group_name`, `description`, `creator`) VALUES
 (8675, 'Brooklyn Stitches', 'B*tches interested in stitches', 'osermay');
@@ -30,7 +31,32 @@ INSERT INTO `a_group` (`group_id`, `group_name`, `description`, `creator`) VALUE
 INSERT INTO `interest` (`category`, `keyword`) VALUES
 ('crafts', 'knitting');
 
-INSERT INTO `member` (`username`, `password`, `firstname`, `lastname`, `email`, `zipcode`) VALUES
-('osermay', 'fd9699a989bacbc3ece9cfe8e3f6cbca', 'Kristin', 'Moser', 'krisemoser@gmail.com', 11232);
 
 
+INSERT INTO `about` (`category`, `keyword`, `group_id`) VALUES
+('crafts', 'knitting', 8675);
+
+
+INSERT INTO `a_group` (`group_id`, `group_name`, `description`, `creator`) VALUES
+(666, 'Devil', 'Church Group', 'shayaansaiyed');
+
+
+INSERT INTO `belongs_to` (`group_id`, `username`, `authorized`) VALUES
+(666, 'shayaansaiyed', 1);
+
+INSERT INTO `interest` (`category`, `keyword`) VALUES
+('Food', 'Baking'),
+('Sports', 'Baseball'),
+('Sports', 'Bowling'),
+('Music', 'Concerts'),
+('Music', 'Karaoke'),
+('Food', 'Wine and Cheese');
+
+INSERT INTO `interested_in` (`username`, `category`, `keyword`) VALUES
+('shayaansaiyed', 'Food', 'Baking');
+
+INSERT INTO `about` (`category`, `keyword`, `group_id`) VALUES
+('Food', 'Baking', 666);
+
+INSERT INTO `organize` (`event_id`, `group_id`) VALUES
+(211, 666);
