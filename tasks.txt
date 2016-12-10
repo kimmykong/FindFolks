@@ -1,9 +1,9 @@
 tasks
 
 1. PUBLICPAGE
-	a. display login
-	b. display random interests
-	c. display events within 3 days //time not that important
+	DONE a. display login
+	DONE b. display random interests
+	DONE c. display events within 3 days //time not that important
 2. LOGIN
 	DONE a. password md5 hash
 	DONE b. display if unsuccessful
@@ -21,13 +21,15 @@ tasks
 
 CASES
 
-4. View My Upcoming Events: Provide various ways for the user to see upcoming
+DONE 4. View My Upcoming Events: Provide various ways for the user to see upcoming
 events for which she has signed up. The default should be showing events for the
-current day and the next three days. Optionally you may include a way for the
+current day and the next three days. 
+
+***Optionally you may include a way for the
 user to specify a range of dates, limit the display to events sponsored by
 particular groups, etc. In each case, the display should include the event_id, title, start_time, location_name, zipcode, and the name of sponsoring group.
 
-5. Sign up for an event: User chooses an event and signs up for the event. You may
+DONE 5. Sign up for an event: User chooses an event and signs up for the event. You may
 find it easier to implement this along with a use case to search for events. If the user has previously signed up for the event no additional action is needed (but FindFolks should not crash).
 
 6. Search for events of interest: ​Shows info (event_id, title, etc.) about upcoming events sponsored by groups that share an interest with this user. Optionally, youmay limit the date range and/or provide other ways for the user to search forevents that they might wish to attend. You might want to combine this with otherrelated use cases.
