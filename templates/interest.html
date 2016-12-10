@@ -14,9 +14,9 @@
 <h2> Related Groups </h2>
 <!-- groups with same interests !-->
 <ul>
-	<ll> <a href = "/groups/" + {{name}} > {{name}} </a> </ll>
-	<ll> <a href = "/groups/" + {{name}} > {{name}} </a> </ll>
-	<ll> <a href = "/groups/" + {{name}} > {{name}} </a> </ll>
+{%for line in group %} <!--with interest.category == group.category !-->
+	<ll> <a href = "/group/" + {{group.name}} > {{group.name}} </a> </ll>
+{% endfor %}
 
 
 

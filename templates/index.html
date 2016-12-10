@@ -10,7 +10,7 @@
 	<p> Events </p>
 	<ul>
 		{%for line in event %}
-			<li> <a href = "/events/211"> {{line.title}} </a> </li>
+			<li> <a href = "/events/{{line.event_id}}"> {{line.title}} </a> </li>
 		{% endfor %}
 	</ul>
 
