@@ -15,7 +15,7 @@
 <!-- groups with same interests !-->
 <ul>
 {%for line in group %} <!--with interest.category == group.category !-->
-	<ll> <a href = "/group/" + {{group.name}} > {{group.name}} </a> </ll>
+	<ll> <a href = "/group/{{line.group_id}}" > {{line.name}} </a> </ll>
 {% endfor %}
 
 
