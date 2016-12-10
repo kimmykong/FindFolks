@@ -15,13 +15,19 @@
 </style>
 
 <table>
-	<th>Time</th>
-	<th>Post</th>
+	<th>event-id</th>
+	<th>Title</th>
+	<th>Start Time</th>
+	<th>Location</th>
+	<th>Zipcode</th>
 
-{% for line in posts %}
+{% for line in event %}
 	<tr>
-		<td>{{line.ts}}</td>
-		<td>{{line.blog_post}}</td>
+		<td>{{line.event_id}}</td>
+		<td>{{line.title}}</td>
+		<td>{{line.start_time}}</td>
+		<td>{{line.location_name}}</td>
+		<td>{{line.zipcode}}</td>
 	</tr>
 {% endfor %}
 </table>
