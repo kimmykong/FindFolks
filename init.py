@@ -96,7 +96,7 @@ def renderIndexPage():
     cursor.execute(query)
     interests = cursor.fetchall()
 
-    query = 'SELECT title FROM an_event'
+    query = 'SELECT * FROM an_event'
     cursor.execute(query)
     events = cursor.fetchall()
 
@@ -146,6 +146,16 @@ def interest(categoryKeyword):
 
     return render_template('interest.html', category=catKey[0], keyword=catKey[1], groups = groups )
 
+
+@app.route('/events/<id>', methods=['GET','POST'])
+def eventPage(id):
+
+    cursor = conn.cursor()
+    query = 'SELECT * FROM an_event WHERE event_id = %s'
+    cursor.execute(query, (str(id)))
+    # stores the results in a variable
+    data = cursor.fetchone()
+    return render_template("event.html", event=data )
 
 # @app.route('/post', methods=['GET', 'POST'])
 # def post():

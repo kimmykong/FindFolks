@@ -14,10 +14,11 @@
 <h2> Related Groups </h2>
 <!-- groups with same interests !-->
 <ul>
-{%for line in groups %} 
+{%for line in groups %} <!--with interest.category == group.category !-->
 	<li> <a href = "/group/{{line.group_id}}" > {{line.name}} </a> </li>
 {% endfor %}
-
+</ul>
+<!--TODO hook group up-->
 
 
 </body>
