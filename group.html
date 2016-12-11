@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<!-- keep the same cases !-->
+ <title>Title</title>
+    <h1>{{group.group_name}}</h1>
+
+    <!-- groups with same interests !-->
+	<ul>
+{%for line in event%} <!--with interest.category == group.category !-->
+	<li><a href ="/events/{{line.event_id}}"> {{line.title}} </a> </li>
+{% endfor %}
+</ul>
+
+
+</body>
+
+
+</html>
