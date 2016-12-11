@@ -10,7 +10,11 @@ app = Flask(__name__)
 # Configure MySQL
 conn = pymysql.connect(host='localhost',
                        user='root',
+<<<<<<< HEAD
                        password='root',
+=======
+                        password='root',
+>>>>>>> 2d636bc351062bd5cd6b693e162af63210d391ec
                        db='findfolks',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
@@ -176,7 +180,11 @@ def interest(categoryKeyword):
     cursor = conn.cursor()
 
 
+<<<<<<< HEAD
     query = 'SELECT a_group.group_name, an_event.title, an_event.description, an_event.event_id FROM a_group JOIN about ON a_group.group_id = about.group_id JOIN organize ON a_group.group_id = organize.group_id JOIN an_event ON an_event.event_id = organize.event_id WHERE about.category = category AND about.keyword = keyword AND NOW() < an_event.start_time'
+=======
+    query = 'SELECT a_group.group_name, a_group.group_id, an_event.title, an_event.description, an_event.event_id FROM a_group JOIN about ON a_group.group_id = about.group_id JOIN organize ON a_group.group_id = organize.group_id JOIN an_event ON an_event.event_id = organize.event_id WHERE about.category = category AND about.keyword = keyword AND NOW() < an_event.start_time'
+>>>>>>> 2d636bc351062bd5cd6b693e162af63210d391ec
     cursor.execute(query)
     data = cursor.fetchall()
 
@@ -198,6 +206,27 @@ def eventPage(id):
     return render_template("event.html", event=data )
 
 
+<<<<<<< HEAD
+=======
+@app.route('/groups/<id>', methods=['GET','POST'])
+def groupPage(id):
+    cursor = conn.cursor()
+    query = 'SELECT * FROM a_group WHERE group_id = %s'
+    cursor.execute(query, (str(id)))
+    # stores the results in a variable
+    data = cursor.fetchone()
+
+
+    query = 'SELECT * FROM an_event JOIN organize ON  an_event.event_id = organize.event_id  JOIN a_group ON a_group.group_id = organize.group_id WHERE a_group.group_id = %s'
+    cursor.execute(query, (str(id)))
+    event = cursor.fetchall()
+
+
+    return render_template("group.html", data = data, event = event)
+
+
+
+>>>>>>> 2d636bc351062bd5cd6b693e162af63210d391ec
 # @app.route('/post', methods=['GET', 'POST'])
 # def post():
 #     username = session['username']
@@ -251,6 +280,9 @@ def createEvent():
     # TODO: Add actual event
     return redirect(url_for('createEventPage'))
     
+
+
+
 
 @app.route('/logout')
 def logout():

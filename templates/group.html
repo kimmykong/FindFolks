@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<!-- keep the same cases !-->
+ <title>Title</title>
+    <h1>{{data.group_name}}</h1>
+    <h2>{{data.description}}</h1>
+    <h1> UPCOMING EVENTS </h1>
+	<ul>
+{%for line in event%} 
+	<li><a href ="/events/{{line.event_id}}"> {{line.title}} </a> </li>
+{% endfor %}
+</ul>
+
+
+</body>
+
+
+</html>
