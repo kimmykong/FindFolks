@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Configure MySQL
 conn = pymysql.connect(host='localhost',
                        user='root',
-                        password='root',
+                        # password='root',
                        db='findfolks',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
@@ -56,25 +56,20 @@ def loginAuth():
         error = 'Invalid login or username'
         return render_template('login.html', error=error)
 
-
 @app.route('/signup/<id>', methods=['GET', 'POST'])
 def signup(id):
     cursor = conn.cursor()
-
 
     query = 'SELECT * FROM an_event WHERE event_id = %s'
     cursor.execute(query, (str(id)))
     data = cursor.fetchone()
 
-
     query = 'INSERT INTO sign_up VALUES (%s,%s, -1)'
     cursor.execute(query, ((str(id)), str(session['username'])))
     conn.commit()
 
-
     cursor.close()
     return render_template("event.html", event=data, signedup=True )
-
 
 # Authenticates the register
 @app.route('/registerAuth', methods=['GET', 'POST'])
@@ -86,7 +81,6 @@ def registerAuth():
     lastname = request.form['lastname']
     email = request.form['email']
     zipcode = request.form['zipcode']
-
 
     # cursor used to send queries
     cursor = conn.cursor()
@@ -104,37 +98,30 @@ def registerAuth():
     else:
         # TODO: zipcode should probs be diff
 
-
         ins = 'INSERT INTO member VALUES(%s, MD5(%s), %s, %s, %s, %s)'
         cursor.execute(ins, (username, password, firstname,lastname,email,zipcode))
         conn.commit()
         cursor.close()
         return renderIndexPage()
 
-
 def renderIndexPage():
     cursor = conn.cursor()
-
 
     query = 'SELECT * FROM interest'
     cursor.execute(query)
     interests = cursor.fetchall()
 
-
     query = 'SELECT * FROM an_event'
     cursor.execute(query)
     events = cursor.fetchall()
 
-
     cursor.close()
     return render_template('index.html', interests=interests, event=events)
-
 
 @app.route('/home')
 def home():
     username = session['username']
     cursor = conn.cursor();
-
 
     # displays events in the next three days by default
     # signed up for and in next 3 days
@@ -179,39 +166,33 @@ def interest(categoryKeyword):
     events = cursor.fetchall()
     return render_template('interest.html', category= category, keyword= keyword, data = data, events = events  )
 
+def goingToEvent(username, id):
+    cursor = conn.cursor()
+    query = 'SELECT * FROM sign_up WHERE event_id = %s AND username=%s'
+    cursor.execute(query, (str(id), str(username)))
+    going = cursor.fetchone()
+    cursor.close()
+    return going
+
+def eventInPast(id):
+    cursor = conn.cursor()
+    query = 'SELECT * FROM an_event WHERE event_id = %s AND end_time < NOW() '
+    cursor.execute(query, (str(id)))
+    past = cursor.fetchone()
+    cursor.close()
+    return past
+
 @app.route('/events/<id>', methods=['GET','POST'])
 def eventPage(id):
     username = session['username']
+    signedup = False
+    private = False
 
-    # always have event info
-    cursor = conn.cursor()
-    query = 'SELECT * FROM an_event WHERE event_id = %s'
-    cursor.execute(query, (str(id)))
-    # stores the results in a variable
-    data = cursor.fetchone()
+    if(username):
+        private = True
+        signedup = goingToEvent(username,id)
 
-    if (not username):
-        # public page
-        return render_template("event.html", event=data)
-    else:
-        query = 'SELECT * FROM sign_up WHERE event_id = %s AND username=%s'
-        cursor.execute(query, (str(id),str(username)))
-        going = cursor.fetchone()
-
-        if (going):
-            query = 'SELECT * FROM an_event WHERE event_id = %s AND end_time < NOW() '
-            cursor.execute(query, (str(id)))
-            past = cursor.fetchone()
-            if(past):
-        #         do stuff for rating
-                return render_template("event.html", event=data, rating=True, private=True)
-            else:
-                # signed up already
-                return render_template("event.html", event=data, signedup=True, private=True)
-        else:
-    #         not going
-    # need test data
-            return render_template("event.html", event=data, signedup=False, private= True)
+    return render_template("event.html", event=getEventInfo(id), signedup=signedup, private=private)
 
 @app.route('/groups/<id>', methods=['GET', 'POST'])
 def groupPage(id):
@@ -241,7 +222,7 @@ def eventSearch():
     cursor.execute(query, (username))
     eventSearch = cursor.fetchall()
     # displays events in the next three days by default
-    query = 'SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() < an_event.start_time < DATE_ADD(NOW(),INTERVAL 3 DAY)'
+    query = 'SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() < an_event.start_time  AND an_event.start_time < DATE_ADD(NOW(),INTERVAL 3 DAY)'
     cursor.execute(query, (username))
     futureEvents = cursor.fetchall()
     cursor.close()
@@ -273,6 +254,38 @@ def createEvent():
     # TODO: Add actual event
     return redirect(url_for('createEventPage'))
 
+@app.route('/rate/<int:id>', methods=["POST"])
+def rate(id):
+    username = session['username']
+    signedUp = False
+
+    if(goingToEvent(username,id)):
+        signedUp = True
+        if(eventInPast(id)):
+            cursor = conn.cursor()
+            query = 'UPDATE `sign_up` SET rating = %s WHERE event_id = %s AND username = %s'
+            cursor.execute(query, (int(request.form['rate']), str(id), username))
+            conn.commit()
+            cursor.close()
+            message = "Rating successful!"
+        else:
+            message = "Silly goose! You can't rate something you haven't gone to yet!"
+    else:
+        message = "lol you're not even going to this event, so stop trying to rate it"
+
+    return render_template("event.html", event=getEventInfo(id), signedup = signedUp, rating=True, private=True, message = message)
+
+def getEventInfo(id):
+    cursor = conn.cursor()
+
+    query = 'SELECT * FROM an_event WHERE event_id = %s'
+    cursor.execute(query, (str(id)))
+    # stores the results in a variable
+    eventInfo = cursor.fetchone()
+
+    cursor.close()
+
+    return eventInfo
 
 @app.route('/logout')
 def logout():

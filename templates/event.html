@@ -14,9 +14,19 @@
     <br>Location: {{event.location_name}}, {{event.zipcode}}
 
     {% if private %}
-        {% if rating %}
-            <p> rate me here</p>
-        {%else%}
+        <p> How many stars would you give the event?</p>
+
+        <p><form name="rating" action="/rate/{{event.event_id}}" method='POST'>
+            <select name="rate">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <button type="submit">Submit!</button>
+        </form>
+        </p>
             {% if signedup %}
                 <p>You've signed up for the event</p>
             {%else%}
@@ -24,8 +34,11 @@
                 <input type="submit" value = Signup />
                 </form>
             {% endif%}
-        {% endif%}
     {%endif%}
+
+    {% if message%}
+    <p> {{message}}</p>
+    {% endif%}
 </p>
 
 </body>

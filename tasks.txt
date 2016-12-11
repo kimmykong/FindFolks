@@ -23,7 +23,7 @@ CASES
 
 DONE 4. View My Upcoming Events: Provide various ways for the user to see upcoming
 events for which she has signed up. The default should be showing events for the
-current day and the next three days. 
+current day and the next three days.
 
 ***Optionally you may include a way for the
 user to specify a range of dates, limit the display to events sponsored by
@@ -37,10 +37,10 @@ DONE 6. Search for events of interest: ​Shows info (event_id, title, etc.) abo
 DONE 7. Create an event​: If the user is authorized to do so, he or she creates a new
 event for a group, providing all the needed data, via forms. The application should prevent unauthorized users from doing this action.
 
-8. Rate an event​ that the user has signed up for and that has already take place.
-	a. Ratings are between 0 and 5 stars
-	b. Ratings cannot be done before the event starts
-	c. If a user tries to rate an event that they didn’t sign up for or that didn’t already start FindFolks should display an error message.
+DONE 8. Rate an event​ that the user has signed up for and that has already take place.
+	DONE a. Ratings are between 0 and 5 stars
+	DONE b. Ratings cannot be done before the event starts
+	DONE c. If a user tries to rate an event that they didn’t sign up for or that didn’t already start FindFolks should display an error message.
 
 9. See average ratings of all events (during last three days or, optionally, some
 specified date range) that were sponsored by groups to which this member
