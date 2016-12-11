@@ -4,7 +4,13 @@
 <body>
 	<p> CREATE AN EVENT </p>
 	<h3>About the Event</h3>
-	<form action="/createAnEvent" methods="POST">
+	<form action="/createAnEvent" method="POST">
+			{% for line in groups %}
+			<input type="radio" name="Group" value="{{line.group_id}}" checked> {{line.group_name}} <br>
+			{% endfor %}
+		<p>Event ID</p>
+		<input type="text" name = "Event_ID" placeholder="Event ID" required/> </br>
+
 		<p>Event Name</p>
 		<input type="text" name = "Event_Name" placeholder="Event Name" required/> </br>
 
@@ -23,7 +29,7 @@
 		<input type="text" name = "Location_Name" placeholder="Location Name" required/> </br>
 
 		<p>Zipcode</p>
-		<input type="number" name = "Zipcode" placeholder="Zipcode" required/> </br>
+		<input type="number" step ="any" name = "Zipcode" placeholder="Zipcode" required/> </br>
 
 		<p>Address</p>
 		<input type="text" name = "Address" placeholder="Address" required/> </br>
@@ -32,12 +38,15 @@
 		<input type="text" name = "Loc_Description" placeholder="Description" required/> </br>
 
 		<p>Latitude
-		<input type="number" name = "Latitude" placeholder="Latitude" required/> </br>
+		<input type="number" step = "any" name = "Latitude" placeholder="Latitude" /> </br>
 
 		<p>Longitude</p>
-		<input type="number" name = "Longitude" placeholder="Longitude" required/> </br>
+		<input type="number" step = "any" name = "Longitude" placeholder="Longitude" /> </br>
 
-		<input type="submit" value = Register />
+		<input type="submit" value = Create />
+	{% if error %}
+		<p class="error"><strong>Error:</strong> {{error}}</p>
+	{% endif %}
 	</form>
 </body>
 </html>
