@@ -12,14 +12,20 @@
 <p>Starts at:{{event.start_time}}
     <br>Ends at: {{event.end_time}}
     <br>Location: {{event.location_name}}, {{event.zipcode}}
-{% if signedup %}
-    <p>You've signed up for the event</p>
-{%else%}
-    <form action="/signup/{{event.event_id}}" method="POST">
-	<input type="submit" value = Signup />
-    </form>
-{% endif%}
 
+    {% if private %}
+        {% if rating %}
+            <p> rate me here</p>
+        {%else%}
+            {% if signedup %}
+                <p>You've signed up for the event</p>
+            {%else%}
+                <form action="/signup/{{event.event_id}}" method="POST">
+                <input type="submit" value = Signup />
+                </form>
+            {% endif%}
+        {% endif%}
+    {%endif%}
 </p>
 
 </body>

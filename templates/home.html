@@ -46,13 +46,14 @@
 
 <br>
 
+<h2>Event's you're signed up for</h2>
 <table>
 	<th>Title</th>
 	<th>Start Time</th>
 	<th>Location</th>
 	<th>Zipcode</th>
 
-{% for line in event %}
+{% for line in futureEvents %}
 	<tr>
 		<td><a href = "/events/{{line.event_id}}"> {{line.title}} </a></td>
 		<td>{{line.start_time}}</td>
@@ -60,8 +61,15 @@
 		<td>{{line.zipcode}}</td>
 	</tr>
 {% endfor %}
+
 </table>
 
+<h2>Events you've gone to</h2>
+<ul>
+	{% for line in pastEvents%}
+	<li><a href = "/events/{{line.event_id}}">{{line.title}} </a></li>
+	{% endfor %}
+</ul>
 <a href="/logout">Logout</a>
 
 </body>

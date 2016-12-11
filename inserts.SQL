@@ -15,6 +15,7 @@ INSERT INTO `member` (`username`, `password`, `firstname`, `lastname`, `email`, 
 
 INSERT INTO `an_event` (`event_id`, `title`, `description`, `start_time`, `end_time`, `location_name`, `zipcode`) VALUES
 (412, 'Taylor Swift Concert', 'the tickets were free', '2016-12-11 10:00:00', '2016-12-22 09:00:00', 'Met Stadium', 11212);
+
 INSERT INTO `sign_up` (`event_id`, `username`, `rating`) VALUES
 (211, 'shayaansaiyed', 2),
 (332, 'shayaansaiyed', 5),
@@ -23,23 +24,18 @@ INSERT INTO `sign_up` (`event_id`, `username`, `rating`) VALUES
 INSERT INTO `member` (`username`, `password`, `firstname`, `lastname`, `email`, `zipcode`) VALUES
 ('osermay', 'fd9699a989bacbc3ece9cfe8e3f6cbca', 'Kristin', 'Moser', 'krisemoser@gmail.com', 11232);
 
-
 INSERT INTO `a_group` (`group_id`, `group_name`, `description`, `creator`) VALUES
 (8675, 'Brooklyn Stitches', 'B*tches interested in stitches', 'osermay');
-
 
 INSERT INTO `interest` (`category`, `keyword`) VALUES
 ('crafts', 'knitting');
 
 
-
 INSERT INTO `about` (`category`, `keyword`, `group_id`) VALUES
 ('crafts', 'knitting', 8675);
 
-
 INSERT INTO `a_group` (`group_id`, `group_name`, `description`, `creator`) VALUES
 (666, 'Devil', 'Church Group', 'shayaansaiyed');
-
 
 INSERT INTO `belongs_to` (`group_id`, `username`, `authorized`) VALUES
 (666, 'shayaansaiyed', 1);
@@ -60,3 +56,8 @@ INSERT INTO `about` (`category`, `keyword`, `group_id`) VALUES
 
 INSERT INTO `organize` (`event_id`, `group_id`) VALUES
 (211, 666);
+
+INSERT INTO `location` (`location_name`, `zipcode`, `address`, `description`, `latitude`, `longitude`) VALUES ('A1', '11232', '725 4th Ave', 'it\'s lit', '40.661111', '-73.997042');
+INSERT INTO `an_event` (`event_id`, `title`, `description`, `start_time`, `end_time`, `location_name`, `zipcode`) VALUES ('100', 'Kim\'s birthday', 'Birthday party for our fav', '2016-10-28 17:00:00', '2016-10-29 01:00:00', 'A1', '11232');
+INSERT INTO `sign_up` (`event_id`, `username`, `rating`) VALUES ('100', 'shayaansaiyed', '-1');
+INSERT INTO `an_event` (`event_id`, `title`, `description`, `start_time`, `end_time`, `location_name`, `zipcode`) VALUES ('7', 'Anya\'s Show', 'the parkers', '2016-12-16 00:00:00', '2016-12-16 03:00:00', 'New York', '11232');
