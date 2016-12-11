@@ -6,13 +6,25 @@
 <!-- keep the same cases !-->
  <title>Title</title>
     <h1>{{data.group_name}}</h1>
-    <h2>{{data.description}}</h1>
-    <h1> UPCOMING EVENTS </h1>
-	<ul>
-{%for line in event%} 
-	<li><a href ="/events/{{line.event_id}}"> {{line.title}} </a> </li>
+    <h3>{{data.description}}</h3>
+    <p> interests: {{interest.category}}, {{interest.keyword}}</p>
+    <h2> UPCOMING EVENTS </h2>
+<table>
+	<th>Title</th>
+	<th>Start Time</th>
+	<th>Location</th>
+	<th>Zipcode</th>
+
+{% for line in event %}
+	<tr>
+		<td><a href = "/events/{{line.event_id}}"> {{line.title}} </a></td>
+		<td>{{line.start_time}}</td>
+		<td>{{line.location_name}}</td>
+		<td>{{line.zipcode}}</td>
+	</tr>
 {% endfor %}
-</ul>
+
+
 
 
 </body>

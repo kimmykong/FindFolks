@@ -32,9 +32,9 @@ particular groups, etc. In each case, the display should include the event_id, t
 DONE 5. Sign up for an event: User chooses an event and signs up for the event. You may
 find it easier to implement this along with a use case to search for events. If the user has previously signed up for the event no additional action is needed (but FindFolks should not crash).
 
-6. Search for events of interest: ​Shows info (event_id, title, etc.) about upcoming events sponsored by groups that share an interest with this user. Optionally, youmay limit the date range and/or provide other ways for the user to search forevents that they might wish to attend. You might want to combine this with otherrelated use cases.
+DONE 6. Search for events of interest: ​Shows info (event_id, title, etc.) about upcoming events sponsored by groups that share an interest with this user. Optionally, youmay limit the date range and/or provide other ways for the user to search forevents that they might wish to attend. You might want to combine this with otherrelated use cases.
 
-7. Create an event​: If the user is authorized to do so, he or she creates a new
+DONE 7. Create an event​: If the user is authorized to do so, he or she creates a new
 event for a group, providing all the needed data, via forms. The application should prevent unauthorized users from doing this action.
 
 8. Rate an event​ that the user has signed up for and that has already take place.

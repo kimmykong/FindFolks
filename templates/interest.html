@@ -18,17 +18,29 @@
 
 
 <h2> Related Groups and Events</h2>
-<!-- groups with same interests !-->
-{%for line in data %} <!--with interest.category == group.category !-->
-	<p> Group: </p> 
-	<a href = "/groups/{{line.group_id}}" > {{line.group_name}} </a> </li>	
-	<p> Event: </p>
-	<a href = "/events/{{line.event_id}}" > {{line.title}} </a></li> 
-	<p> {{line.description}} </p>
+
+<p> Groups: </p> 
+<ul>
+{%for line in data %} 
+	<li><a href = "/groups/{{line.group_id}}" > {{line.group_name}} </a> </li>
 {% endfor %}
+</ul>
 
+<p>Events</p>
+<table>
+	<th>Title</th>
+	<th>Start Time</th>
+	<th>Location</th>
+	<th>Zipcode</th>
 
-<!--TODO hook group up-->
+{% for line in events %}
+	<tr>
+		<td><a href = "/events/{{line.event_id}}"> {{line.title}} </a></td>
+		<td>{{line.start_time}}</td>
+		<td>{{line.location_name}}</td>
+		<td>{{line.zipcode}}</td>
+	</tr>
+{% endfor %}
 
 
 
