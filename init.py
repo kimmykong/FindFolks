@@ -135,9 +135,16 @@ def home():
     cursor.execute(query, (username))
     pastEvents = cursor.fetchall()
 
+    query = 'SELECT * FROM friend WHERE friend_of = %s'
+    cursor.execute(query, (username))
+    friends = cursor.fetchall()
+
+    query = 'SELECT friend.friend_to, sign_up.event_id, an_event.title FROM friend JOIN sign_up ON friend.friend_to = sign_up.username JOIN an_event ON an_event.event_id = sign_up.event_id WHERE friend.friend_of = %s'
+    cursor.execute(query, (username))
+    friendEvents = cursor.fetchall()
     cursor.close()
 
-    return render_template('home.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents)
+    return render_template('home.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents, friends = friends, friendEvents = friendEvents)
 
 @app.route('/sandbox')
 def sandbox():
@@ -227,32 +234,6 @@ def eventSearch():
     futureEvents = cursor.fetchall()
     cursor.close()
     return render_template('home.html', username=username, eventSearch=eventSearch, button=True, event=futureEvents)
-
-@app.route('/createEvent')
-def createEventPage():
-    return render_template("createEvent.html")
-
-@app.route('/createAnEvent',methods=['GET', 'POST'])
-def createEvent():
-    username = session['username']
-    event_name = request.form['Event_Name']
-    description = request.form['Description']
-    start = request.form['Start_Date']
-    end = request.form['End_Date']
-    location_name = request.form['Location_Name']
-    zipcode = request.form['Zipcode']
-    address = request.form['Address']
-    loc_desc = request.form['Loc_Description']
-    latitude = request.form['Latitude']
-    longitude = request.form['Longitude']
-    cursor = conn.cursor()
-    # TODO: Add a check to see if the location already exists
-    query = 'INSERT INTO `location` (`location_name`, `zipcode`, `address`, `description`, `latitude`, `longitude`) VALUES (%s, %s, %s, %s, %s, %s)'
-    cursor.execute(query,(location_name, str(zipcode), address, loc_desc, str(latitude), str(longitude)))
-    conn.commit()
-    cursor.close()
-    # TODO: Add actual event
-    return redirect(url_for('createEventPage'))
 
 @app.route('/rate/<int:id>', methods=["POST"])
 def rate(id):
