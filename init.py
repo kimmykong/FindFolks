@@ -118,31 +118,15 @@ def renderIndexPage(logout=False):
     cursor.close()
     return render_template('index.html', interests=interests, event=events, logout=logout)
 
+# note: updates to home need to be made to eventSearch too
 @app.route('/home')
 def home():
     username = session['username']
-    cursor = conn.cursor();
 
-    # displays events in the next three days by default
-    # signed up for and in next 3 days
-
-    query = 'SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() < an_event.start_time  AND an_event.start_time < DATE_ADD(NOW(),INTERVAL 3 DAY)'
-    cursor.execute(query, (username))
-    futureEvents = cursor.fetchall()
-
-    # displays past events signed up for
-    query = 'SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() > an_event.start_time'
-    cursor.execute(query, (username))
-    pastEvents = cursor.fetchall()
-
-    query = 'SELECT * FROM friend WHERE friend_of = %s'
-    cursor.execute(query, (username))
-    friends = cursor.fetchall()
-
-    query = 'SELECT friend.friend_to, sign_up.event_id, an_event.title FROM friend JOIN sign_up ON friend.friend_to = sign_up.username JOIN an_event ON an_event.event_id = sign_up.event_id WHERE friend.friend_of = %s'
-    cursor.execute(query, (username))
-    friendEvents = cursor.fetchall()
-    cursor.close()
+    futureEvents = nextThreeDaysOfSignedUpEvents(username)
+    pastEvents = pastEventsSIgnedUpFor(username)
+    friends = getFriends(username)
+    friendEvents = getFriendsFutureEvents(username)
 
     return render_template('home.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents, friends = friends, friendEvents = friendEvents)
 
@@ -172,22 +156,6 @@ def interest(categoryKeyword):
     cursor.execute(query)
     events = cursor.fetchall()
     return render_template('interest.html', category= category, keyword= keyword, data = data, events = events  )
-
-def goingToEvent(username, id):
-    cursor = conn.cursor()
-    query = 'SELECT * FROM sign_up WHERE event_id = %s AND username=%s'
-    cursor.execute(query, (str(id), str(username)))
-    going = cursor.fetchone()
-    cursor.close()
-    return going
-
-def eventInPast(id):
-    cursor = conn.cursor()
-    query = 'SELECT * FROM an_event WHERE event_id = %s AND end_time < NOW() '
-    cursor.execute(query, (str(id)))
-    past = cursor.fetchone()
-    cursor.close()
-    return past
 
 @app.route('/events/<id>', methods=['GET','POST'])
 def eventPage(id):
@@ -224,16 +192,14 @@ def groupPage(id):
 @app.route('/eventSearch', methods=['GET', 'POST'])
 def eventSearch():
     username = session['username']
-    cursor = conn.cursor()
-    query = 'SELECT * FROM interested_in JOIN about ON interested_in.keyword = about.keyword JOIN organize ON about.group_id = organize.group_id JOIN an_event ON organize.event_id = an_event.event_id JOIN a_group ON about.group_id = a_group.group_id WHERE interested_in.username = %s AND an_event.start_time > NOW()'
-    cursor.execute(query, (username))
-    eventSearch = cursor.fetchall()
-    # displays events in the next three days by default
-    query = 'SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() < an_event.start_time  AND an_event.start_time < DATE_ADD(NOW(),INTERVAL 3 DAY)'
-    cursor.execute(query, (username))
-    futureEvents = cursor.fetchall()
-    cursor.close()
-    return render_template('home.html', username=username, eventSearch=eventSearch, button=True, event=futureEvents)
+
+    futureEvents = nextThreeDaysOfSignedUpEvents(username)
+    pastEvents = pastEventsSIgnedUpFor(username)
+    friends = getFriends(username)
+    friendEvents = getFriendsFutureEvents(username)
+
+    return render_template('home.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents,friends=friends, friendEvents=friendEvents, button=True)
+
 
 @app.route('/rate/<int:id>', methods=["POST"])
 def rate(id):
@@ -256,17 +222,7 @@ def rate(id):
 
     return render_template("event.html", event=getEventInfo(id), signedup = signedUp, rating=True, private=True, message = message)
 
-def getEventInfo(id):
-    cursor = conn.cursor()
 
-    query = 'SELECT * FROM an_event WHERE event_id = %s'
-    cursor.execute(query, (str(id)))
-    # stores the results in a variable
-    eventInfo = cursor.fetchone()
-
-    cursor.close()
-
-    return eventInfo
 
 @app.route('/createEvent')
 def createEventPage():
@@ -308,6 +264,50 @@ def createAnEvent():
 ##    conn.commit()
     cursor.close()
     return redirect(url_for('createEventPage'))
+
+# a bunch of SQL statements
+def goingToEvent(username, id):
+    query = 'SELECT * FROM sign_up WHERE event_id = %s AND username=%s'
+    return executeSQLOneResponse(query,(str(id), str(username)))
+
+def executeSQLOneResponse(query,args):
+    return  executeSQL(query,args)
+
+def executeSQLManyResponses(query,args):
+    return executeSQL(query,args, False)
+
+def executeSQL(query,args,one=True):
+    cursor = conn.cursor()
+    cursor.execute(query, args)
+    if(one):
+        out = cursor.fetchone()
+    else:
+        out = cursor.fetchall()
+    cursor.close()
+    return out
+
+def eventInPast(id):
+    query = 'SELECT * FROM an_event WHERE event_id = %s AND end_time < NOW() '
+    return executeSQLOneResponse(query, (str(id)))
+
+def nextThreeDaysOfSignedUpEvents(username):
+    return executeSQLManyResponses('SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() < an_event.start_time  AND an_event.start_time < DATE_ADD(NOW(),INTERVAL 3 DAY)',username)
+
+def pastEventsSIgnedUpFor(username):
+    query = 'SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() > an_event.start_time'
+    return executeSQLManyResponses(query,username)
+
+def getFriends(username):
+    query = 'SELECT * FROM friend WHERE friend_of = %s'
+    return executeSQLManyResponses(query,username)
+
+def getFriendsFutureEvents(username):
+    query = 'SELECT friend.friend_to, sign_up.event_id, an_event.title FROM friend JOIN sign_up ON friend.friend_to = sign_up.username JOIN an_event ON an_event.event_id = sign_up.event_id WHERE friend.friend_of = %s AND NOW() < an_event.start_time'
+    return executeSQLManyResponses(query,username)
+
+def getEventInfo(id):
+    query = 'SELECT * FROM an_event WHERE event_id = %s'
+    return executeSQLOneResponse(query,id)
 
 @app.route('/logout')
 def logout():

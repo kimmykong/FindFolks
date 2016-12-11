@@ -42,8 +42,12 @@ DONE 8. Rate an event​ that the user has signed up for and that has already ta
 	DONE b. Ratings cannot be done before the event starts
 	DONE c. If a user tries to rate an event that they didn’t sign up for or that didn’t already start FindFolks should display an error message.
 
-9. See average ratings of all events (during last three days or, optionally, some
-specified date range) that were sponsored by groups to which this member
+9. See average ratings of all events (during last three days or,
+
+optionally, some
+specified date range
+
+that were sponsored by groups to which this member
 belongs.
 
 10. See friends’ events: Displays a list of upcoming events for which any of the
@@ -51,7 +55,7 @@ member’s friends are signed up. (Here, the current user X’s friends are peop
 such that there is a tuple (friend_of, friend_to) = (X, Y) are in the friends
 relationship, i.e. people who have “friended” X.
 
-11.Logout: The session is destroyed and a “goodbye” page or the login page is
+DONE 11.Logout: The session is destroyed and a “goodbye” page or the login page is
 displayed
 
 EXTRAS

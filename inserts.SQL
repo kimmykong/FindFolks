@@ -61,3 +61,11 @@ INSERT INTO `location` (`location_name`, `zipcode`, `address`, `description`, `l
 INSERT INTO `an_event` (`event_id`, `title`, `description`, `start_time`, `end_time`, `location_name`, `zipcode`) VALUES ('100', 'Kim\'s birthday', 'Birthday party for our fav', '2016-10-28 17:00:00', '2016-10-29 01:00:00', 'A1', '11232');
 INSERT INTO `sign_up` (`event_id`, `username`, `rating`) VALUES ('100', 'shayaansaiyed', '-1');
 INSERT INTO `an_event` (`event_id`, `title`, `description`, `start_time`, `end_time`, `location_name`, `zipcode`) VALUES ('7', 'Anya\'s Show', 'the parkers', '2016-12-16 00:00:00', '2016-12-16 03:00:00', 'New York', '11232');
+
+INSERT INTO `friend` (`friend_of`, `friend_to`) VALUES ('osermay', 'shayaansaiyed');
+
+INSERT INTO `an_event` (`event_id`, `title`, `description`, `start_time`, `end_time`, `location_name`, `zipcode`) VALUES
+(777, 'Year 3000', 'Might outsell Kelly Clarkson', '2017-09-25 00:00:00', '2017-09-15 00:00:00', 'A1', 11232);
+
+INSERT INTO `sign_up` (`event_id`, `username`, `rating`) VALUES ('777', 'osermay', '-1');
+INSERT INTO `sign_up` (`event_id`, `username`, `rating`) VALUES ('777', 'shayaansaiyed', '-1');
