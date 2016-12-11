@@ -287,6 +287,47 @@ def getEventInfo(id):
 
     return eventInfo
 
+@app.route('/createEvent')
+def createEventPage():
+    username = session['username']
+    cursor = conn.cursor()
+    query = 'SELECT * FROM belongs_to JOIN a_group ON belongs_to.group_id = a_group.group_id where belongs_to.username = %s'
+    cursor.execute(query,(username))
+    groups = cursor.fetchall()
+    return render_template("createEvent.html", groups = groups)
+
+@app.route('/createAnEvent',methods=['GET', 'POST'])
+def createAnEvent():
+    username = session['username']
+    group_id = request.form['Group']
+    event_id = request.form['Event_ID']
+    event_name = request.form['Event_Name']
+    description = request.form['Description']
+    start = request.form['Start_Date']
+    end = request.form['End_Date']
+    location_name = request.form['Location_Name']
+    zipcode = request.form['Zipcode']
+    address = request.form['Address']
+    loc_desc = request.form['Loc_Description']
+    latitude = request.form['Latitude']
+    longitude = request.form['Longitude']
+    cursor = conn.cursor()
+    # TODO: Add a check to see if the location already exists
+    # TODO: allow for latitude and longitude to be allowed decimale values
+    # TODO: allow user to choose from existing locations or choose to create a new location
+    query = 'INSERT INTO location (location_name, zipcode, address, description, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s)'
+    cursor.execute(query,(location_name, int(zipcode), address, loc_desc, int(latitude), int(longitude)))
+    conn.commit()
+    query = 'INSERT INTO an_event (event_id, title, description, start_time, end_time, location_name, zipcode) VALUES (%s, %s, %s, %s, %s, %s, %s);'
+    cursor.execute(query,(event_id, event_name, description, start, end, location_name, zipcode))
+    conn.commit()
+    # NEED TO UPDATE ORGANIZE TABLE
+##    query = 'INSERT INTO organize (event_id, group_id) VALUES (%s, %s)'
+##    cursor.execute(query,(event_id, group_id))
+##    conn.commit()
+    cursor.close()
+    return redirect(url_for('createEventPage'))
+
 @app.route('/logout')
 def logout():
     session.pop('username')
