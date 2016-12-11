@@ -72,9 +72,25 @@
 	<li><a href = "/events/{{line.event_id}}">{{line.title}} </a></li>
 	{% endfor %}
 </ul>
+<h2>Friends</h2>
+<table>
+	<th>Username</th>
+	<th>Upcoming Events</th>
+	{%for friend in friends %}
+	<tr>
+		<td><a href = "/members/{{username}}"> {{friend.friend_to}}</td>
+		<td>  
+		{% for line in friendEvents %}
+			{% if line.friend_to == friend.friend_to %}
+			<a href = "/events/{{line.event_id}}"> {{line.title}} </a> <br>
+			{% endif %}
+		{% endfor %}
+
+		</td>
+
+	</tr>
+	{% endfor %}
+
+</table>
 <a href="/logout">Logout</a>
-
 </body>
-
-
-</html>
