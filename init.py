@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Configure MySQL
 conn = pymysql.connect(host='localhost',
                        user='root',
-                       # password='root',
+                       password='root',
                        db='findfolks',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
@@ -184,7 +184,7 @@ def eventPage(id):
 def eventSearch():
     username = session['username']
     cursor = conn.cursor()
-    query = 'SELECT * FROM interested_in JOIN about ON interested_in.keyword = about.keyword JOIN organize ON about.group_id = organize.group_id JOIN an_event ON organize.event_id = an_event.event_id JOIN a_group ON about.group_id = a_group.group_id WHERE interested_in.username = %s'
+    query = 'SELECT * FROM interested_in JOIN about ON interested_in.keyword = about.keyword JOIN organize ON about.group_id = organize.group_id JOIN an_event ON organize.event_id = an_event.event_id JOIN a_group ON about.group_id = a_group.group_id WHERE interested_in.username = %s AND an_event.start_time > NOW()'
     cursor.execute(query, (username))
     eventSearch = cursor.fetchall()
     # displays events in the next three days by default
