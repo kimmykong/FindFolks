@@ -104,7 +104,7 @@ def registerAuth():
         cursor.close()
         return renderIndexPage()
 
-def renderIndexPage():
+def renderIndexPage(logout=False):
     cursor = conn.cursor()
 
     query = 'SELECT * FROM interest'
@@ -116,7 +116,7 @@ def renderIndexPage():
     events = cursor.fetchall()
 
     cursor.close()
-    return render_template('index.html', interests=interests, event=events)
+    return render_template('index.html', interests=interests, event=events, logout=logout)
 
 @app.route('/home')
 def home():
@@ -290,7 +290,8 @@ def getEventInfo(id):
 @app.route('/logout')
 def logout():
     session.pop('username')
-    return redirect('/')
+    session['username'] = None
+    return renderIndexPage(True)
 
 app.secret_key = 'some key that you will never guess'
 # Run the app on localhost port 5007
