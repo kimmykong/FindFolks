@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Configure MySQL
 conn = pymysql.connect(host='localhost',
                        user='root',
-                        # password='root',
+                       password='root',
                        db='findfolks',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
@@ -228,14 +228,21 @@ def rate(id):
 def createEventPage():
     username = session['username']
     cursor = conn.cursor()
-    query = 'SELECT * FROM belongs_to JOIN a_group ON belongs_to.group_id = a_group.group_id where belongs_to.username = %s'
+    # Get groups that user is authorized to create a group in
+    query = 'SELECT * FROM belongs_to JOIN a_group ON belongs_to.group_id = a_group.group_id where belongs_to.username = %s AND belongs_to.authorized = 1'
     cursor.execute(query,(username))
     groups = cursor.fetchall()
-    return render_template("createEvent.html", groups = groups)
+    error = 'NOT AUTHORIZED TO CREATE ANY EVENT'
+    if (groups):
+        return render_template("createEvent.html", groups = groups)
+    else :
+        return render_template("createEvent.html", groups = groups, error = error)
+        
 
 @app.route('/createAnEvent',methods=['GET', 'POST'])
 def createAnEvent():
     username = session['username']
+    # Get information from html
     group_id = request.form['Group']
     event_id = request.form['Event_ID']
     event_name = request.form['Event_Name']
@@ -249,18 +256,23 @@ def createAnEvent():
     latitude = request.form['Latitude']
     longitude = request.form['Longitude']
     cursor = conn.cursor()
+    # Check to see if location already exists
+    checkQ = 'SELECT * FROM location WHERE location_name = %s AND zipcode = %s'
+    cursor.execute(checkQ,(location_name, int(zipcode)))
     # TODO: Add a check to see if the location already exists
     # TODO: allow for latitude and longitude to be allowed decimale values
     # TODO: allow user to choose from existing locations or choose to create a new location
+    # Insert location into SQL
     query = 'INSERT INTO location (location_name, zipcode, address, description, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s)'
     cursor.execute(query,(location_name, int(zipcode), address, loc_desc, int(latitude), int(longitude)))
     conn.commit()
+    # Insert event into SQL
     query = 'INSERT INTO an_event (event_id, title, description, start_time, end_time, location_name, zipcode) VALUES (%s, %s, %s, %s, %s, %s, %s);'
     cursor.execute(query,(event_id, event_name, description, start, end, location_name, zipcode))
     conn.commit()
     # NEED TO UPDATE ORGANIZE TABLE
 ##    query = 'INSERT INTO organize (event_id, group_id) VALUES (%s, %s)'
-##    cursor.execute(query,(event_id, group_id))
+##    cursor.execute(query,(event_id,group_id))
 ##    conn.commit()
     cursor.close()
     return redirect(url_for('createEventPage'))

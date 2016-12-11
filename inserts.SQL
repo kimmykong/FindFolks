@@ -1,3 +1,20 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Gist
+ @shayaansaiyed
+ Unwatch 3
+  Star 0
+  Fork 0 kimmykong/FindFolks Private
+ Code  Issues 0  Pull requests 0  Projects 0  Wiki  Pulse  Graphs
+Branch: master Find file Copy pathFindFolks/inserts.SQL
+5e24ef5  2 hours ago
+@kimmykong kimmykong code cleaning, fixed eventsearch
+2 contributors @kimmykong @kristinmoser
+RawBlameHistory     
+72 lines (51 sloc)  3.73 KB
 INSERT INTO `an_event` (`event_id`, `title`, `description`, `start_time`, `end_time`, `location_name`, `zipcode`) VALUES
 (211, 'Baseball Game', 'Let\'s go to a baseball game, fam', '2016-12-11 04:00:00', '2016-12-11 08:00:00', 'Met Stadium', 11212),
 (332, 'Cheese Tasting', 'n/a', '2016-12-13 05:00:00', '2016-12-16 00:00:00', 'New York', 11232);
@@ -69,3 +86,5 @@ INSERT INTO `an_event` (`event_id`, `title`, `description`, `start_time`, `end_t
 
 INSERT INTO `sign_up` (`event_id`, `username`, `rating`) VALUES ('777', 'osermay', '-1');
 INSERT INTO `sign_up` (`event_id`, `username`, `rating`) VALUES ('777', 'shayaansaiyed', '-1');
+Contact GitHub API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Status Help

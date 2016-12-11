@@ -2,6 +2,10 @@
 <head>
 </head>
 <body>
+	{% if error %}
+	<p>{{error}}</p>
+	<a href="/home"> Go Back </a>
+	{% else %}
 	<p> CREATE AN EVENT </p>
 	<h3>About the Event</h3>
 	<form action="/createAnEvent" method="POST">
@@ -23,7 +27,6 @@
 		<p>End Date</p>
 		<input type="date" name = "End_Date" placeholder="Enter End Date" required/> </br>
 
-
 		<h3>Location Information</h3>
 		<p>Location Name</p>
 		<input type="text" name = "Location_Name" placeholder="Location Name" required/> </br>
@@ -44,9 +47,11 @@
 		<input type="number" step = "any" name = "Longitude" placeholder="Longitude" /> </br>
 
 		<input type="submit" value = Create />
-	{% if error %}
-		<p class="error"><strong>Error:</strong> {{error}}</p>
-	{% endif %}
+		{% if error %}
+			<p class="error"><strong>Error:</strong> {{error}}</p>
+		{% endif %}
+	
 	</form>
+	{% endif %}
 </body>
 </html>
