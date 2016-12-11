@@ -4,10 +4,40 @@
 <body>
 	<p> CREATE AN EVENT </p>
 	<h3>About the Event</h3>
-	<form action="/createEvent" methos="POST">
+	<form action="/createAnEvent" methods="POST">
+		<p>Event Name</p>
 		<input type="text" name = "Event_Name" placeholder="Event Name" required/> </br>
+
+		<p>Description</p>
 		<input type="text" name = "Description" placeholder="Description" required/> </br>
+
+		<p>Start Date</p>
 		<input type="date" name = "Start_Date" placeholder="Enter Start Date" required/> </br>
+
+		<p>End Date</p>
+		<input type="date" name = "End_Date" placeholder="Enter End Date" required/> </br>
+
+
+		<h3>Location Information</h3>
+		<p>Location Name</p>
+		<input type="text" name = "Location_Name" placeholder="Location Name" required/> </br>
+
+		<p>Zipcode</p>
+		<input type="number" name = "Zipcode" placeholder="Zipcode" required/> </br>
+
+		<p>Address</p>
+		<input type="text" name = "Address" placeholder="Address" required/> </br>
+
+		<p>Location Description</p>
+		<input type="text" name = "Loc_Description" placeholder="Description" required/> </br>
+
+		<p>Latitude
+		<input type="number" name = "Latitude" placeholder="Latitude" required/> </br>
+
+		<p>Longitude</p>
+		<input type="number" name = "Longitude" placeholder="Longitude" required/> </br>
+
+		<input type="submit" value = Register />
 	</form>
 </body>
 </html>
