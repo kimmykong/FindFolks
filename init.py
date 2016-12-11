@@ -56,20 +56,25 @@ def loginAuth():
         error = 'Invalid login or username'
         return render_template('login.html', error=error)
 
+
 @app.route('/signup/<id>', methods=['GET', 'POST'])
 def signup(id):
     cursor = conn.cursor()
+
 
     query = 'SELECT * FROM an_event WHERE event_id = %s'
     cursor.execute(query, (str(id)))
     data = cursor.fetchone()
 
+
     query = 'INSERT INTO sign_up VALUES (%s,%s, -1)'
     cursor.execute(query, ((str(id)), str(session['username'])))
     conn.commit()
 
+
     cursor.close()
     return render_template("event.html", event=data, signedup=True )
+
 
 # Authenticates the register
 @app.route('/registerAuth', methods=['GET', 'POST'])
@@ -81,6 +86,7 @@ def registerAuth():
     lastname = request.form['lastname']
     email = request.form['email']
     zipcode = request.form['zipcode']
+
 
     # cursor used to send queries
     cursor = conn.cursor()
@@ -97,30 +103,38 @@ def registerAuth():
         return render_template('register.html', error=error)
     else:
         # TODO: zipcode should probs be diff
+
+
         ins = 'INSERT INTO member VALUES(%s, MD5(%s), %s, %s, %s, %s)'
         cursor.execute(ins, (username, password, firstname,lastname,email,zipcode))
         conn.commit()
         cursor.close()
         return renderIndexPage()
 
+
 def renderIndexPage():
     cursor = conn.cursor()
+
 
     query = 'SELECT * FROM interest'
     cursor.execute(query)
     interests = cursor.fetchall()
 
+
     query = 'SELECT * FROM an_event'
     cursor.execute(query)
     events = cursor.fetchall()
 
+
     cursor.close()
     return render_template('index.html', interests=interests, event=events)
+
 
 @app.route('/home')
 def home():
     username = session['username']
     cursor = conn.cursor();
+
 
     # displays events in the next three days by default
     # signed up for and in next 3 days
@@ -215,7 +229,7 @@ def groupPage(id):
 def eventSearch():
     username = session['username']
     cursor = conn.cursor()
-    query = 'SELECT * FROM interested_in JOIN about ON interested_in.keyword = about.keyword JOIN organize ON about.group_id = organize.group_id JOIN an_event ON organize.event_id = an_event.event_id JOIN a_group ON about.group_id = a_group.group_id WHERE interested_in.username = %s'
+    query = 'SELECT * FROM interested_in JOIN about ON interested_in.keyword = about.keyword JOIN organize ON about.group_id = organize.group_id JOIN an_event ON organize.event_id = an_event.event_id JOIN a_group ON about.group_id = a_group.group_id WHERE interested_in.username = %s AND an_event.start_time > NOW()'
     cursor.execute(query, (username))
     eventSearch = cursor.fetchall()
     # displays events in the next three days by default
@@ -224,6 +238,33 @@ def eventSearch():
     futureEvents = cursor.fetchall()
     cursor.close()
     return render_template('home.html', username=username, eventSearch=eventSearch, button=True, event=futureEvents)
+
+@app.route('/createEvent')
+def createEventPage():
+    return render_template("createEvent.html")
+
+@app.route('/createAnEvent',methods=['GET', 'POST'])
+def createEvent():
+    username = session['username']
+    event_name = request.form['Event_Name']
+    description = request.form['Description']
+    start = request.form['Start_Date']
+    end = request.form['End_Date']
+    location_name = request.form['Location_Name']
+    zipcode = request.form['Zipcode']
+    address = request.form['Address']
+    loc_desc = request.form['Loc_Description']
+    latitude = request.form['Latitude']
+    longitude = request.form['Longitude']
+    cursor = conn.cursor()
+    # TODO: Add a check to see if the location already exists
+    query = 'INSERT INTO `location` (`location_name`, `zipcode`, `address`, `description`, `latitude`, `longitude`) VALUES (%s, %s, %s, %s, %s, %s)'
+    cursor.execute(query,(location_name, str(zipcode), address, loc_desc, str(latitude), str(longitude)))
+    conn.commit()
+    cursor.close()
+    # TODO: Add actual event
+    return redirect(url_for('createEventPage'))
+
 
 @app.route('/logout')
 def logout():
