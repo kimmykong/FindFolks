@@ -361,6 +361,9 @@ def createAGroup():
     query = 'INSERT INTO a_group (group_id, group_name, description, creator) VALUES (%s, %s, %s, %s);'
     cursor.execute(query,(int(group_id), group_name, desc, username))
     conn.commit()
+    query = 'INSERT INTO belongs_to (group_id, username, authorized) VALUES (%s, %s, %s);'
+    cursor.execute(query,(int(group_id), username, 0))
+    conn.commit()
     cursor.close()
     return redirect(url_for('createGroup'))
 
