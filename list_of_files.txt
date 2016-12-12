@@ -1,2 +1,27 @@
 A list of the files in your application and what’s in each file. (E.g.
 “homepage.phpscript to generate home page”.)
+
+scripts
+1. init.py : all the backend queries and functions retrieve values from the database and connect to the html files
+
+
+templates
+1. event.html
+
+2. home.html : displays the user's homepage after login
+
+3. index.html : displays the public site
+
+4. interest.html : an interest page including events & groups with that interest
+
+5. login.html : provides the user with a form to login
+
+6. createGroup.html : provides a user witha form to create a group
+
+7. register.html : allows a new user to sign up for find folks
+
+8. group.html : displays a group page including interests and upcoming events
+
+9. createEvent.html : provides an authorized user with a form to create an event for their group
+
+10. friends.html : displays a member page with their events (past and present) and their frines (also has the ability to add the member as a friend)
