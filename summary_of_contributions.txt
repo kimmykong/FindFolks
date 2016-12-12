@@ -2,6 +2,22 @@
 
  Kimberly Phillip:
 
+ -Updates to homepage
+    -Displayed groups with similar interests that you're not a member of on homepage
+    -Displayed average event ratings for groups you're a member of on homepage
+    -Displayed past events on homepage
+ -Create event pages
+    -Different views based on if user is logged in, going to the event, went to the event
+    -Created functionaility for rating events
+    -Created functionaility for signing up for events
+ -Added MD5 hashing to password
+ -Displayed logout confirmation
+ -Create tables for sponsors and companies
+ -Group pages
+     -Created functionaility for joining groups
+     -Add sponsors to group pages
+
+
  Shayaan Saiyed:
  -made create events page and wrote corresponding SQL statements and python functions
  -made create groups page and wrote corresponding SQL statements and python functions

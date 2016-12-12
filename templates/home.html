@@ -44,7 +44,7 @@
 			<td>{{line.category}}</td>
 			<td>{{line.group_name}}</td>
 			<td>{{line.event_id}}</td>
-			<td>{{line.title}}</td>
+			<td><a href = "/events/{{line.event_id}}"> {{line.title}} </a></td>
 			<td>{{line.start_time}}</td>
 			<td>{{line.location_name}}</td>
 			<td>{{line.zipcode}}</td>
@@ -113,7 +113,7 @@
 	</table>
 
 
-<h2>Groups that sare your interests that you're not in</h2>
+<h2>Groups that share your interests that you're not in</h2>
 		<table>
 		<th>Group name</th>
 		{%for group in newGroups %}

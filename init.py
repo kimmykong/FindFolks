@@ -163,17 +163,6 @@ def home():
 
     return render_template('home.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents, friends = friends, groups= groups, friendEvents = friendEvents, newGroups = newGroups, font_color=font_color)
 
-@app.route('/sandbox')
-def sandbox():
-    cursor = conn.cursor()
-
-    query = 'SELECT * FROM interest'
-    cursor.execute(query)
-    data = cursor.fetchall()
-
-    cursor.close()
-    return render_template('sandbox.html', data=data)
-
 @app.route('/interest/<categoryKeyword>', methods=['GET','POST'])
 def interest(categoryKeyword):
     catKey = str(categoryKeyword).split("+")
@@ -181,13 +170,14 @@ def interest(categoryKeyword):
     keyword = catKey[1]
     cursor = conn.cursor()
 
-    query = 'SELECT a_group.group_name, a_group.group_id FROM a_group JOIN about ON a_group.group_id = about.group_id  WHERE about.category = category AND about.keyword = keyword'
-    cursor.execute(query)
+    query = 'SELECT a_group.group_name, a_group.group_id FROM a_group JOIN about ON a_group.group_id = about.group_id  WHERE about.category = %s AND about.keyword = %s'
+    cursor.execute(query, (category, keyword))
     data = cursor.fetchall()
 
-    query = 'SELECT an_event.event_id, an_event.title, an_event.start_time, an_event.location_name, an_event.zipcode FROM a_group JOIN about ON a_group.group_id = about.group_id JOIN organize ON a_group.group_id = organize.group_id JOIN an_event ON an_event.event_id = organize.event_id WHERE about.category = category AND about.keyword = keyword AND NOW() < an_event.start_time'
-    cursor.execute(query)
+    query = 'SELECT an_event.event_id, an_event.title, an_event.start_time, an_event.location_name, an_event.zipcode FROM a_group JOIN about ON a_group.group_id = about.group_id JOIN organize ON a_group.group_id = organize.group_id JOIN an_event ON an_event.event_id = organize.event_id WHERE about.category = %s AND about.keyword = %s AND NOW() < an_event.start_time'
+    cursor.execute(query, (category, keyword))
     events = cursor.fetchall()
+
     return render_template('interest.html', category= category, keyword= keyword, data = data, events = events  )
 
 @app.route('/events/<id>', methods=['GET','POST'])
