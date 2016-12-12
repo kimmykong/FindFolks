@@ -1,4 +1,38 @@
-● A separate file that lists all of the use cases and the queries executed by them
-(with brief explanation). This should be well organized and readable. It should be
-detailed enough to give readers a good idea of how your application works, without
-making them dig through all the code.
+A separate file that lists all of the use cases and the queries executed by them
+(with brief explanation). This should be well organized and readable. It should be detailed enough to give readers a good idea of how your application works, without making them dig through all the code.
+
+
+3. View My Upcoming Events: Provide various ways for the user to see upcoming
+events for which she has signed up. The default should be showing events for the
+current day and the next three days. Optionally you may include a way for the
+user to specify a range of dates, limit the display to events sponsored by
+particular groups, etc. In each case, the display should include the event_id, title, start_time, location_name, zipcode, and the name of sponsoring group.
+
+4. Sign up for an event: User chooses an event and signs up for the event. You may find it easier to implement this along with a use case to search for events. If the user has previously signed up for the event no additional action is needed (but FindFolks should not crash).
+
+
+
+5. Search for events of interest: ​A button search events is located on the home page where if the user clicks it, it will search for groups that have the same interests as you and join that result with the organize and an_event tables to find their respective events.
+
+
+
+
+
+6. Create an event​: If the user tries clicks on Create Event from home page and tries to create an event for a group, the query is run and checked if the user is in the group it is making an event for and is authorized to make that event. If so, event is created, else, an error is displayed.
+
+check if user in group & authorized --> SELECT * FROM belongs_to JOIN a_group ON belongs_to.group_id = a_group.group_id where belongs_to.username = %s AND belongs_to.authorized = 1
+
+7. Rate an event​ that the user has signed up for and that has already take place.
+a. Ratings are between 0 and 5 stars
+b. Ratings cannot be done before the event starts
+c. If a user tries to rate an event that they didn’t sign up for or that didn’t
+already start FindFolks should display an error message.
+
+8. See average ratings of all events that were sponsored by groups to which this member belongs.
+
+9. See friends’ events: On the user's page, the user can see who they are friend's with and their upcoming events inside a table(home.html). This is done is two different queries. One to find all the user's friends and one to find their events.
+get friends --> 'SELECT * FROM friend WHERE friend_of = %s'
+
+get those friend's future events --> 'SELECT friend.friend_to, sign_up.event_id, an_event.title FROM friend JOIN sign_up ON friend.friend_to = sign_up.username JOIN an_event ON an_event.event_id = sign_up.event_id WHERE friend.friend_of = %s AND NOW() < an_event.start_time'
+
+10.Logout: displayed at the bottom of the user's homepage as a button and redirects the user to the public site (home.html). The user is popped from the session and and the username for the session is set to None. No queries used.
