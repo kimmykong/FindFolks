@@ -86,5 +86,29 @@ INSERT INTO `an_event` (`event_id`, `title`, `description`, `start_time`, `end_t
 
 INSERT INTO `sign_up` (`event_id`, `username`, `rating`) VALUES ('777', 'osermay', '-1');
 INSERT INTO `sign_up` (`event_id`, `username`, `rating`) VALUES ('777', 'shayaansaiyed', '-1');
-Contact GitHub API Training Shop Blog About
-© 2016 GitHub, Inc. Terms Privacy Security Status Help
+
+ALTER TABLE `member` ADD `color` VARCHAR(6) NOT NULL DEFAULT '000000' AFTER `zipcode`;
+
+CREATE TABLE `company` (
+  `name` varchar(20) NOT NULL,
+  `industry` varchar(20) NOT NULL
+)
+
+ALTER TABLE `company`
+  ADD PRIMARY KEY (`name`);
+
+CREATE TABLE sponsors(
+    company_name varchar(20),
+    event_id int(20),
+    donation int(20),
+    PRIMARY KEY (company_name,event_id),
+	FOREIGN KEY (company_name) REFERENCES company(name),
+    FOREIGN KEY (event_id) REFERENCES an_event(event_id)
+    )
+
+INSERT INTO `company` (`name`, `industry`) VALUES ('Google', 'Tech'), ('NCWIT', 'Non profit');
+
+
+ALTER TABLE `sponsors` ADD CONSTRAINT `sponsors` FOREIGN KEY (`company_name`) REFERENCES `company` (`name`), ADD CONSTRAINT `sponsors` FOREIGN KEY (`event_id`) REFERENCES `an_event` (`event_id`)
+
+INSERT INTO `sponsors` (`company_name`, `event_id`, `donation`) VALUES ('Google', '100', '1000');

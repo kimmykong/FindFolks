@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Configure MySQL
 conn = pymysql.connect(host='localhost',
                        user='root',
-                       password='root',
+                       # password='root',
                        db='findfolks',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
@@ -200,7 +200,10 @@ def eventPage(id):
         private = True
         signedup = goingToEvent(username,id)
 
-    return render_template("event.html", event=getEventInfo(id), signedup=signedup, private=private)
+    query = 'SELECT * FROM sponsors JOIN an_event on sponsors.event_id=an_event.event_id WHERE an_event.event_id = %s'
+    sponsor = executeSQLManyResponses(query,id)
+
+    return render_template("event.html", event=getEventInfo(id), signedup=signedup, private=private, sponsors = sponsor)
 
 @app.route('/groups/<id>', methods=['GET', 'POST'])
 def groupPage(id):
@@ -239,16 +242,20 @@ def eventSearch():
     query = 'SELECT AVG(sign_up.rating) as avgRate, a_group.group_id, a_group.group_name FROM a_group JOIN organize on a_group.group_id = organize.group_id JOIN an_event ON an_event.event_id = organize.event_id JOIN sign_up on an_event.event_id = sign_up.event_id WHERE a_group.group_id IN ( SELECT a_group.group_id FROM belongs_to JOIN a_group on belongs_to.group_id = a_group.group_id WHERE belongs_to.username = %s) GROUP BY an_event.event_id'
     groups = executeSQLManyResponses(query,username)
 
-
     futureEvents = nextThreeDaysOfSignedUpEvents(username)
     pastEvents = pastEventsSIgnedUpFor(username)
     friends = getFriends(username)
     friendEvents = getFriendsFutureEvents(username)
+    query = 'SELECT * FROM interested_in JOIN about ON interested_in.keyword = about.keyword JOIN organize ON about.group_id = organize.group_id JOIN an_event ON organize.event_id = an_event.event_id JOIN a_group ON about.group_id = a_group.group_id WHERE interested_in.username = %s'
+
+    eventSearch = executeSQLManyResponses(query,username)
 
     query = 'SELECT * FROM interested_in JOIN interest ON (interested_in.category=interest.category and interested_in.keyword=interest.keyword) JOIN about ON (interest.category = about.category AND interest.keyword = about.keyword) JOIN a_group ON a_group.group_id = about.group_id WHERE a_group.group_id not in (SELECT a_group.group_id FROM belongs_to JOIN a_group on belongs_to.group_id = a_group.group_id WHERE belongs_to.username = %s)'
     newGroups = executeSQLManyResponses(query,username)
 
-    return render_template('home.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents,friends=friends, friendEvents=friendEvents, button=True, groups = groups, newGroups=newGroups)
+    font_color = getColor(username)
+
+    return render_template('home.html', font_color=font_color, username=username, eventSearch=eventSearch, futureEvents=futureEvents, pastEvents=pastEvents,friends=friends, friendEvents=friendEvents, button=True, groups = groups, newGroups=newGroups)
 
 @app.route('/rate/<int:id>', methods=["POST"])
 def rate(id):

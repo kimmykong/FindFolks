@@ -6,7 +6,7 @@ scripts
 
 
 templates
-1. event.html
+1. event.html : displays the information about an event
 
 2. home.html : displays the user's homepage after login
 
@@ -16,7 +16,7 @@ templates
 
 5. login.html : provides the user with a form to login
 
-6. createGroup.html : provides a user witha form to create a group
+6. createGroup.html : provides a user with a form to create a group
 
 7. register.html : allows a new user to sign up for find folks
 

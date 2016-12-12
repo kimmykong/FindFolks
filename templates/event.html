@@ -39,6 +39,16 @@
     {% if message%}
     <p> {{message}}</p>
     {% endif%}
+
+    {% if sponsors%}
+
+    <p>Sponsored by: </p>
+        	<ul>
+		{%for line in sponsors %}
+			<li>{{line.company_name}}, ${{line.donation}} </a> </li>
+		{% endfor %}
+	</ul>
+    {% endif%}
 </p>
 
 </body>

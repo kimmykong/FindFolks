@@ -1,0 +1,48 @@
+A separate file that lists all of the use cases and the queries executed by them
+(with brief explanation). This should be well organized and readable. It should be detailed enough to give readers a good idea of how your application works, without making them dig through all the code.
+
+
+3. View My Upcoming Events: Provide various ways for the user to see upcoming
+events for which she has signed up. The default should be showing events for the
+current day and the next three days. Optionally you may include a way for the
+user to specify a range of dates, limit the display to events sponsored by
+particular groups, etc. In each case, the display should include the event_id, title, start_time, location_name, zipcode, and the name of sponsoring group.
+
+DONE 4. Sign up for event: User is logged in and goes to an event page.  If they are not already signed up for the event, they can do so.
+
+To check if user is already signed up for event
+'SELECT * FROM sign_up WHERE event_id = %s AND username=%s'
+
+To sign user up for event
+'INSERT INTO sign_up (`event_id`, `username`) VALUES (%s,%s)'
+
+
+DONE 5. Search for events of interest: ​A button search events is located on the home page where if the user clicks it, it will search for groups that have the same interests as you and join that result with the organize and an_event tables to find their respective events.
+
+To do the search:
+'SELECT * FROM interested_in JOIN about ON interested_in.keyword = about.keyword JOIN organize ON about.group_id = organize.group_id JOIN an_event ON organize.event_id = an_event.event_id JOIN a_group ON about.group_id = a_group.group_id WHERE interested_in.username = %s'
+
+
+DONE 6. Create an event​: If the user tries clicks on Create Event from home page and tries to create an event for a group, the query is run and checked if the user is in the group it is making an event for and is authorized to make that event. If so, event is created, else, an error is displayed.
+
+check if user in group & authorized --> SELECT * FROM belongs_to JOIN a_group ON belongs_to.group_id = a_group.group_id where belongs_to.username = %s AND belongs_to.authorized = 1
+
+DONE 7. Rate an event​ that the user has signed up for and that has already take place.
+
+To check if a user is going to an event:
+'SELECT * FROM sign_up WHERE event_id = %s AND username=%s'
+
+To check if an event is in the past:
+'SELECT * FROM an_event WHERE event_id = %s AND end_time < NOW() '
+
+To update the rating:
+'UPDATE `sign_up` SET rating = %s WHERE event_id = %s AND username = %s'
+
+8. See average ratings of all events that were sponsored by groups to which this member belongs.
+
+DONE 9. See friends’ events: On the user's page, the user can see who they are friend's with and their upcoming events inside a table(home.html). This is done is two different queries. One to find all the user's friends and one to find their events.
+get friends --> 'SELECT * FROM friend WHERE friend_of = %s'
+
+get those friend's future events --> 'SELECT friend.friend_to, sign_up.event_id, an_event.title FROM friend JOIN sign_up ON friend.friend_to = sign_up.username JOIN an_event ON an_event.event_id = sign_up.event_id WHERE friend.friend_of = %s AND NOW() < an_event.start_time'
+
+DONE 10.Logout: displayed at the bottom of the user's homepage as a button and redirects the user to the public site (home.html). The user is popped from the session and and the username for the session is set to None. No queries used.
