@@ -5,3 +5,22 @@
  Shayaan Saiyed:
 
  Kristin Moser:
+  	-interests: 
+ 		page for an interest 
+ 			-queries searched for groups with that interest and upcoming events and displayed on the page
+ 		display some interests on the public page --> which if clicked on go to an interest page
+ 	-groups:
+ 		page for a group
+ 			-queries searched for the group's interest and upcoming events from that group
+ 	-friends:
+ 		page for members
+ 			-much like the home page of the user, the member page is denoted by the url "/friends/<username>"
+ 			-queries were created to display friends of that member and their corresponding upcoming events
+ 			-a special query was done to check if this user was a friend of the user that was logged in, if not the logged-in-user can choose to add this user as a friend via the "add friend" button; once clicked the logged-in-user gets added to the friend table as 'friend_of' and the user (who's page they are on) is added as 'friend_to'; the button then changes from "add friend" to "✓friends" 
+ 	-theme:
+ 		member table
+ 			-color column was added to the member table as a char(6) and default 000000
+ 			-the member can set this variable to whatever hex value they want when they register
+ 			-the corresponding color will appear as the color of their name due to the addition of css code on the home page
+ 	-events:
+ 		-added upcoming events to the index page
