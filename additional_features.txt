@@ -1,0 +1,13 @@
+Brief description of additional features you added.
+
+1. Member Pages: The ability to look at other member's pagegs including their 	future and past events, and friends
+
+2. Add Friend: The ability to add a friend while on their member page
+
+3. Theme: Allows the user to input a hex color when registering which will make the color of their username on their home change
+
+4. Create Group: Allows users to create a group through their home page
+
+5. Company Sponsors: Creating new tables called company and sponsors which allows companies to sponsor events
+
+6. Join Group: Allows users to go onto a group page and join the group

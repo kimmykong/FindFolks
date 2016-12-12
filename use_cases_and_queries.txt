@@ -1,0 +1,4 @@
+● A separate file that lists all of the use cases and the queries executed by them
+(with brief explanation). This should be well organized and readable. It should be
+detailed enough to give readers a good idea of how your application works, without
+making them dig through all the code.
