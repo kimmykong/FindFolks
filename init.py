@@ -1,4 +1,4 @@
-e# Import Flask Library
+# Import Flask Library
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
 
@@ -294,8 +294,10 @@ def createAnEvent():
     event_id = request.form['Event_ID']
     event_name = request.form['Event_Name']
     description = request.form['Description']
-    start = request.form['Start_Date']
-    end = request.form['End_Date']
+    startdate = request.form['Start_Date']
+    starttime = request.form['Start_Time']
+    enddate = request.form['End_Date']
+    endtime = request.form['End_Time']
     location_name = request.form['Location_Name']
     zipcode = request.form['Zipcode']
     address = request.form['Address']
@@ -306,22 +308,22 @@ def createAnEvent():
     # Check to see if location already exists
     checkQ = 'SELECT * FROM location WHERE location_name = %s AND zipcode = %s'
     cursor.execute(checkQ,(location_name, int(zipcode)))
-    # TODO: Add a check to see if the location already exists
-    # TODO: allow for latitude and longitude to be allowed decimale values
-    # TODO: allow user to choose from existing locations or choose to create a new location
-    # Insert location into SQL
-    query = 'INSERT INTO location (location_name, zipcode, address, description, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s)'
-    cursor.execute(query,(location_name, int(zipcode), address, loc_desc, int(latitude), int(longitude)))
-    conn.commit()
-    # Insert event into SQL
-    query = 'INSERT INTO an_event (event_id, title, description, start_time, end_time, location_name, zipcode) VALUES (%s, %s, %s, %s, %s, %s, %s);'
-    cursor.execute(query,(event_id, event_name, description, start, end, location_name, zipcode))
-    conn.commit()
-    # NEED TO UPDATE ORGANIZE TABLE
-##    query = 'INSERT INTO organize (event_id, group_id) VALUES (%s, %s)'
-##    cursor.execute(query,(event_id,group_id))
-##    conn.commit()
-    cursor.close()
+    if(cursor.fetchone()):
+        return render_template("createEvent.html", error='This location already exists')
+    else:
+        # Insert location into SQL
+        query = 'INSERT INTO location (location_name, zipcode, address, description, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s)'
+        cursor.execute(query,(location_name, int(zipcode), address, loc_desc, float(latitude), float(longitude)))
+        conn.commit()
+        # Insert event into SQL
+        query = 'INSERT INTO an_event (event_id, title, description, start_time, end_time, location_name, zipcode) VALUES (%s, %s, %s, %s, %s, %s, %s);'
+        cursor.execute(query,(int(event_id), event_name, description, startdate+' '+starttime, enddate+' '+endtime, location_name, zipcode))
+        conn.commit()
+        # Insert into ORGANIZE table
+        query = 'INSERT INTO organize (event_id, group_id) VALUES (%s, %s)'
+        cursor.execute(query,(event_id,group_id))
+        conn.commit()
+        cursor.close()
     return redirect(url_for('createEventPage'))
 
 @app.route('/addAFriend/<username>',methods=['GET', 'POST'])
@@ -357,7 +359,7 @@ def createAGroup():
     desc = request.form['Description']
     cursor = conn.cursor()
     query = 'INSERT INTO a_group (group_id, group_name, description, creator) VALUES (%s, %s, %s, %s);'
-    cursor.execute(query,(group_id, group_name, desc, username))
+    cursor.execute(query,(int(group_id), group_name, desc, username))
     conn.commit()
     cursor.close()
     return redirect(url_for('createGroup'))

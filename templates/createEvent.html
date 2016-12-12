@@ -13,7 +13,7 @@
 			<input type="radio" name="Group" value="{{line.group_id}}" checked> {{line.group_name}} <br>
 			{% endfor %}
 		<p>Event ID</p>
-		<input type="text" name = "Event_ID" placeholder="Event ID" required/> </br>
+		<input type="number" name = "Event_ID" placeholder="Event ID" required/> </br>
 
 		<p>Event Name</p>
 		<input type="text" name = "Event_Name" placeholder="Event Name" required/> </br>
@@ -24,8 +24,14 @@
 		<p>Start Date</p>
 		<input type="date" name = "Start_Date" placeholder="Enter Start Date" required/> </br>
 
+		<p>Start Time</p>
+		<input type="time" name = "Start_Time" required/> </br>
+
 		<p>End Date</p>
 		<input type="date" name = "End_Date" placeholder="Enter End Date" required/> </br>
+
+		<p>End Time</p>
+		<input type="time" name = "End_Time" required/> </br>
 
 		<h3>Location Information</h3>
 		<p>Location Name</p>
@@ -41,10 +47,10 @@
 		<input type="text" name = "Loc_Description" placeholder="Description" required/> </br>
 
 		<p>Latitude
-		<input type="number" step = "any" name = "Latitude" placeholder="Latitude" /> </br>
+		<input type="number" step = "0.0001" name = "Latitude" placeholder="Latitude" /> </br>
 
 		<p>Longitude</p>
-		<input type="number" step = "any" name = "Longitude" placeholder="Longitude" /> </br>
+		<input type="number" step = "0.0001" name = "Longitude" placeholder="Longitude" /> </br>
 
 		<input type="submit" value = Create />
 		{% if error %}
