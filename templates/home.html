@@ -16,9 +16,11 @@
 	<h2>Welcome</h2>
 	<h1>{{username}}</h1>
 
+<h2><u>Events</u></h2>
+
 <!-- This only shows up if the user is authorized??? -->
 <a href="/createEvent">Create an event</a>
-<br>
+<br><br>
 
 <form action="/eventSearch" method="POST">
 	<input type="submit" value="Search for events">
@@ -93,7 +95,32 @@
 
 	</tr>
 	{% endfor %}
-
 </table>
+
+<h2>Your groups</h2>
+	<table>
+		<th>Group name</th>
+		<th>Average event rating</th>
+		{%for group in groups %}
+		<tr>
+			<td><a href = "/groups/{{group.group_id}}">{{group.group_name}}</a></td>
+			<td> {{group.avgRate}}</td>
+		</tr>
+		{%endfor%}
+
+	</table>
+
+
+<h2>Groups that sare your interests that you're not in</h2>
+		<table>
+		<th>Group name</th>
+		{%for group in newGroups %}
+		<tr>
+			<td><a href = "/groups/{{group.group_id}}">{{group.group_name}}</a></td>
+		</tr>
+		{%endfor%}
+
+	</table>
+
 <a href="/logout">Logout</a>
 </body>

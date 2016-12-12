@@ -64,12 +64,37 @@ def signup(id):
     cursor.execute(query, (str(id)))
     data = cursor.fetchone()
 
-    query = 'INSERT INTO sign_up VALUES (%s,%s, -1)'
+    query = 'INSERT INTO sign_up (`event_id`, `username`) VALUES (%s,%s)'
     cursor.execute(query, ((str(id)), str(session['username'])))
     conn.commit()
 
     cursor.close()
     return render_template("event.html", event=data, signedup=True )
+
+@app.route('/joinGroup/<id>', methods=['GET', 'POST'])
+def joinGroup(id):
+    cursor = conn.cursor()
+
+    query = 'INSERT INTO belongs_to VALUES (%s,%s,0)'
+    cursor.execute(query, ((str(id)), str(session['username'])))
+    conn.commit()
+
+    query = 'SELECT * FROM a_group WHERE group_id = %s'
+    cursor.execute(query, (str(id)))
+    data = cursor.fetchone()
+
+    query = 'SELECT * FROM about WHERE group_id = %s'
+    cursor.execute(query, (str(id)))
+    interest = cursor.fetchone()
+
+    query = 'SELECT * FROM an_event JOIN organize ON  an_event.event_id = organize.event_id  JOIN a_group ON a_group.group_id = organize.group_id WHERE organize.group_id = %s'
+    cursor.execute(query, (str(id)))
+    event = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template("group.html", data=data, event=event, interest=interest, inGroup=True, loggedIn=True)
+
 
 # Authenticates the register
 @app.route('/registerAuth', methods=['GET', 'POST'])
@@ -129,7 +154,14 @@ def home():
     friends = getFriends(username)
     friendEvents = getFriendsFutureEvents(username)
 
-    return render_template('home.html', username=username, font_color=font_color, futureEvents=futureEvents, pastEvents=pastEvents, friends = friends, friendEvents = friendEvents)
+    query = 'SELECT AVG(sign_up.rating) as avgRate, a_group.group_id, a_group.group_name FROM a_group JOIN organize on a_group.group_id = organize.group_id JOIN an_event ON an_event.event_id = organize.event_id JOIN sign_up on an_event.event_id = sign_up.event_id WHERE a_group.group_id IN ( SELECT a_group.group_id FROM belongs_to JOIN a_group on belongs_to.group_id = a_group.group_id WHERE belongs_to.username = %s) GROUP BY an_event.event_id'
+    groups = executeSQLManyResponses(query,username)
+
+    # groups that share your interests that you're not in
+    query = 'SELECT * FROM interested_in JOIN interest ON (interested_in.category=interest.category and interested_in.keyword=interest.keyword) JOIN about ON (interest.category = about.category AND interest.keyword = about.keyword) JOIN a_group ON a_group.group_id = about.group_id WHERE a_group.group_id not in (SELECT a_group.group_id FROM belongs_to JOIN a_group on belongs_to.group_id = a_group.group_id WHERE belongs_to.username = %s)'
+    newGroups = executeSQLManyResponses(query,username)
+
+    return render_template('home.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents, friends = friends, groups= groups, friendEvents = friendEvents, newGroups = newGroups, font_color=font_color)
 
 @app.route('/sandbox')
 def sandbox():
@@ -172,35 +204,51 @@ def eventPage(id):
 
 @app.route('/groups/<id>', methods=['GET', 'POST'])
 def groupPage(id):
+    username = session['username']
+
     cursor = conn.cursor()
     query = 'SELECT * FROM a_group WHERE group_id = %s'
     cursor.execute(query, (str(id)))
-    # stores the results in a variable
     data = cursor.fetchone()
 
     query = 'SELECT * FROM about WHERE group_id = %s'
     cursor.execute(query, (str(id)))
-    # stores the results in a variable
     interest = cursor.fetchone()
 
     query = 'SELECT * FROM an_event JOIN organize ON  an_event.event_id = organize.event_id  JOIN a_group ON a_group.group_id = organize.group_id WHERE organize.group_id = %s'
     cursor.execute(query, (str(id)))
     event = cursor.fetchall()
 
-    return render_template("group.html", data=data, event=event, interest = interest)
+    inGroup=False
+    loggedIn=False
+
+    if(username): #logged in
+        loggedIn = True
+        query = 'SELECT * FROM belongs_to WHERE belongs_to.username = %s AND belongs_to.group_id = %s '
+        inTheGroup = executeSQLOneResponse(query,(username,id))
+        if (inTheGroup):
+            inGroup=True
+
+    return render_template("group.html", data=data, event=event, interest = interest, inGroup=inGroup, loggedIn =loggedIn)
 
 # Search for events with interest
 @app.route('/eventSearch', methods=['GET', 'POST'])
 def eventSearch():
     username = session['username']
 
+    query = 'SELECT AVG(sign_up.rating) as avgRate, a_group.group_id, a_group.group_name FROM a_group JOIN organize on a_group.group_id = organize.group_id JOIN an_event ON an_event.event_id = organize.event_id JOIN sign_up on an_event.event_id = sign_up.event_id WHERE a_group.group_id IN ( SELECT a_group.group_id FROM belongs_to JOIN a_group on belongs_to.group_id = a_group.group_id WHERE belongs_to.username = %s) GROUP BY an_event.event_id'
+    groups = executeSQLManyResponses(query,username)
+
+
     futureEvents = nextThreeDaysOfSignedUpEvents(username)
     pastEvents = pastEventsSIgnedUpFor(username)
     friends = getFriends(username)
     friendEvents = getFriendsFutureEvents(username)
 
-    return render_template('home.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents,friends=friends, friendEvents=friendEvents, button=True)
+    query = 'SELECT * FROM interested_in JOIN interest ON (interested_in.category=interest.category and interested_in.keyword=interest.keyword) JOIN about ON (interest.category = about.category AND interest.keyword = about.keyword) JOIN a_group ON a_group.group_id = about.group_id WHERE a_group.group_id not in (SELECT a_group.group_id FROM belongs_to JOIN a_group on belongs_to.group_id = a_group.group_id WHERE belongs_to.username = %s)'
+    newGroups = executeSQLManyResponses(query,username)
 
+    return render_template('home.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents,friends=friends, friendEvents=friendEvents, button=True, groups = groups, newGroups=newGroups)
 
 @app.route('/rate/<int:id>', methods=["POST"])
 def rate(id):
@@ -222,8 +270,6 @@ def rate(id):
         message = "lol you're not even going to this event, so stop trying to rate it"
 
     return render_template("event.html", event=getEventInfo(id), signedup = signedUp, rating=True, private=True, message = message)
-
-
 
 @app.route('/createEvent')
 def createEventPage():
@@ -284,7 +330,7 @@ def addAFriend(username):
     cursor = conn.cursor()
     query = 'INSERT INTO friend(friend_of, friend_to) VALUES (%s, %s)'
     cursor.execute(query,(mainUser, username))
-    conn.commit() 
+    conn.commit()
     cursor.close()
     return redirect(url_for('friend', username = username))
 
@@ -292,7 +338,7 @@ def addAFriend(username):
 @app.route('/friends/<username>',methods=['GET', 'POST'])
 def friend(username):
     mainUser = session['username']
-    addFriend = friendsWithUser(mainUser, username)  
+    addFriend = friendsWithUser(mainUser, username)
     futureEvents = nextThreeDaysOfSignedUpEvents(username)
     pastEvents = pastEventsSIgnedUpFor(username)
     friends = getFriends(username)

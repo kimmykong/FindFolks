@@ -14,7 +14,7 @@ tasks
 	   You may choose to provide links to other URLS that will present the
 	interfaces for other use cases, or you may include those interfaces directly
 	on the home page.
-	c. Any other information you’d like to include. For example, you might want to
+	DONE c. Any other information you’d like to include. For example, you might want to
 	include groups the user belongs to, events she’s signed up for, etc. on the
 	home page, or you may prefer to just show them when she does some of
 	the following use cases.
@@ -42,7 +42,7 @@ DONE 8. Rate an event​ that the user has signed up for and that has already ta
 	DONE b. Ratings cannot be done before the event starts
 	DONE c. If a user tries to rate an event that they didn’t sign up for or that didn’t already start FindFolks should display an error message.
 
-9. See average ratings of all events (during last three days or,
+DONE 9. See average ratings of all events (during last three days or,
 
 optionally, some
 specified date range
@@ -50,7 +50,7 @@ specified date range
 that were sponsored by groups to which this member
 belongs.
 
-10. See friends’ events: Displays a list of upcoming events for which any of the
+DONE 10. See friends’ events: Displays a list of upcoming events for which any of the
 member’s friends are signed up. (Here, the current user X’s friends are people Y
 such that there is a tuple (friend_of, friend_to) = (X, Y) are in the friends
 relationship, i.e. people who have “friended” X.
@@ -60,14 +60,14 @@ displayed
 
 EXTRAS
 
-1.
+DONE 1. Add fried
 
-2.
+DONE 2. Member profile
 
-3.
+3. Companies sponsor events
 
-4.
+DONE 4. Themes
 
-5.
+5. Create groups
 
-6.
+DONE 6. Join groups

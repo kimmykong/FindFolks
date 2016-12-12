@@ -3,7 +3,20 @@
 <head>
 </head>
 <body>
-<!-- keep the same cases !-->
+
+<p>
+	{% if loggedIn %}
+		{% if inGroup %}
+			You're in this group
+		{% else %}
+			 <form action="/joinGroup/{{data.group_id}}" method="POST">
+					<input type="submit" value = "Join Group!" />
+					</form>
+		{% endif %}
+	{% endif %}
+</p>
+
+
  <title>Title</title>
     <h1>{{data.group_name}}</h1>
     <h3>{{data.description}}</h3>
@@ -24,7 +37,7 @@
 	</tr>
 {% endfor %}
 
-
+</table>
 
 
 </body>
