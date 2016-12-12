@@ -1,4 +1,4 @@
-# Import Flask Library
+e# Import Flask Library
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
 
@@ -345,6 +345,22 @@ def friend(username):
     friendEvents = getFriendsFutureEvents(username)
     return render_template('friends.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents, friends = friends, friendEvents = friendEvents, addFriend = addFriend)
 
+@app.route('/createGroup')
+def createGroup():
+    return render_template('createGroup.html')
+
+@app.route('/createAGroup', methods=['GET', 'POST'])
+def createAGroup():
+    username=session['username']
+    group_id = request.form['Group_ID']
+    group_name = request.form['Group_Name']
+    desc = request.form['Description']
+    cursor = conn.cursor()
+    query = 'INSERT INTO a_group (group_id, group_name, description, creator) VALUES (%s, %s, %s, %s);'
+    cursor.execute(query,(group_id, group_name, desc, username))
+    conn.commit()
+    cursor.close()
+    return redirect(url_for('createGroup'))
 
 # a bunch of SQL statements
 def getColor(username):
