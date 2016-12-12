@@ -7,51 +7,17 @@
 	table, th, td{
 		border: 1px solid black;
 	}
-	h1{
-		color: #{{font_color.color}};
-	}
-
 </style>
 
-	<h2>Welcome</h2>
-	<h1>{{username}}</h1>
-
-<!-- This only shows up if the user is authorized??? -->
-<a href="/createEvent">Create an event</a>
-<br>
-
-<form action="/eventSearch" method="POST">
-	<input type="submit" value="Search for events">
-</form>
-{% if button %}
-	<table>
-		<th>Keyword</th>
-		<th>Category</th>
-		<th>Group Name</th>
-		<th>event-id</th>
-		<th>Title</th>
-		<th>Start Time</th>
-		<th>Location</th>
-		<th>Zipcode</th>
-
-	{% for line in eventSearch %}
-		<tr>
-			<td>{{line.keyword}}</td>
-			<td>{{line.category}}</td>
-			<td>{{line.group_name}}</td>
-			<td>{{line.event_id}}</td>
-			<td>{{line.title}}</td>
-			<td>{{line.start_time}}</td>
-			<td>{{line.location_name}}</td>
-			<td>{{line.zipcode}}</td>
-		</tr>
-	{% endfor %}
-	</table>
-{% endif %}
-
-<br>
-
-<h2>Event's you're signed up for in the next 3 days</h2>
+	<h1>{{username}}'s page</h1>
+	{% if addFriend is defined and addFriend|length > 0 %}
+ 		<button type="submit">✓Friends</button>
+ 	{% else %}	
+ 		<form action="/addAFriend/{{username}}" method="POST">
+ 		<button type="submit">Add Friend</button>
+ 		</form>
+ 	{% endif %}	
+<h2>Events they're signed up for in the next 3 days</h2>
 <table>
 	<th>Title</th>
 	<th>Start Time</th>
@@ -69,12 +35,13 @@
 
 </table>
 
-<h2>Events you've gone to</h2>
+<h2>Events they've gone to</h2>
 <ul>
 	{% for line in pastEvents%}
 	<li><a href = "/events/{{line.event_id}}">{{line.title}} </a></li>
 	{% endfor %}
 </ul>
+
 <h2>Friends</h2>
 <table>
 	<th>Username</th>
@@ -92,8 +59,6 @@
 		</td>
 
 	</tr>
-	{% endfor %}
-
+{% endfor %}
 </table>
-<a href="/logout">Logout</a>
 </body>

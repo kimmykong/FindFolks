@@ -81,6 +81,7 @@ def registerAuth():
     lastname = request.form['lastname']
     email = request.form['email']
     zipcode = request.form['zipcode']
+    color = request.form['color']
 
     # cursor used to send queries
     cursor = conn.cursor()
@@ -98,8 +99,8 @@ def registerAuth():
     else:
         # TODO: zipcode should probs be diff
 
-        ins = 'INSERT INTO member VALUES(%s, MD5(%s), %s, %s, %s, %s)'
-        cursor.execute(ins, (username, password, firstname,lastname,email,zipcode))
+        ins = 'INSERT INTO member VALUES(%s, MD5(%s), %s, %s, %s, %s %s)'
+        cursor.execute(ins, (username, password, firstname,lastname,email,zipcode, color))
         conn.commit()
         cursor.close()
         return renderIndexPage()
@@ -122,13 +123,13 @@ def renderIndexPage(logout=False):
 @app.route('/home')
 def home():
     username = session['username']
-
+    font_color = getColor(username)
     futureEvents = nextThreeDaysOfSignedUpEvents(username)
     pastEvents = pastEventsSIgnedUpFor(username)
     friends = getFriends(username)
     friendEvents = getFriendsFutureEvents(username)
 
-    return render_template('home.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents, friends = friends, friendEvents = friendEvents)
+    return render_template('home.html', username=username, font_color=font_color, futureEvents=futureEvents, pastEvents=pastEvents, friends = friends, friendEvents = friendEvents)
 
 @app.route('/sandbox')
 def sandbox():
@@ -277,7 +278,37 @@ def createAnEvent():
     cursor.close()
     return redirect(url_for('createEventPage'))
 
+@app.route('/addAFriend/<username>',methods=['GET', 'POST'])
+def addAFriend(username):
+    mainUser = session['username']
+    cursor = conn.cursor()
+    query = 'INSERT INTO friend(friend_of, friend_to) VALUES (%s, %s)'
+    cursor.execute(query,(mainUser, username))
+    conn.commit() 
+    cursor.close()
+    return redirect(url_for('friend', username = username))
+
+
+@app.route('/friends/<username>',methods=['GET', 'POST'])
+def friend(username):
+    mainUser = session['username']
+    addFriend = friendsWithUser(mainUser, username)  
+    futureEvents = nextThreeDaysOfSignedUpEvents(username)
+    pastEvents = pastEventsSIgnedUpFor(username)
+    friends = getFriends(username)
+    friendEvents = getFriendsFutureEvents(username)
+    return render_template('friends.html', username=username, futureEvents=futureEvents, pastEvents=pastEvents, friends = friends, friendEvents = friendEvents, addFriend = addFriend)
+
+
 # a bunch of SQL statements
+def getColor(username):
+    query = 'SELECT color FROM member WHERE username=%s'
+    return executeSQLOneResponse(query,(str(username)))
+
+def friendsWithUser(mainUser, member):
+    query = 'SELECT * FROM friend WHERE friend_of = %s AND friend_to = %s'
+    return executeSQLManyResponses(query,(str(mainUser), str(member)))
+
 def goingToEvent(username, id):
     query = 'SELECT * FROM sign_up WHERE event_id = %s AND username=%s'
     return executeSQLOneResponse(query,(str(id), str(username)))
