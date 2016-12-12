@@ -8,6 +8,9 @@ current day and the next three days. Optionally you may include a way for the
 user to specify a range of dates, limit the display to events sponsored by
 particular groups, etc. In each case, the display should include the event_id, title, start_time, location_name, zipcode, and the name of sponsoring group.
 
+To view the upcoming event the user has signed up for:
+SELECT * FROM sign_up JOIN an_event ON sign_up.event_id = an_event.event_id WHERE sign_up.username = %s AND NOW() < an_event.start_time  AND an_event.start_time < DATE_ADD(NOW(),INTERVAL 3 DAY)
+
 DONE 4. Sign up for event: User is logged in and goes to an event page.  If they are not already signed up for the event, they can do so.
 
 To check if user is already signed up for event
@@ -19,13 +22,25 @@ To sign user up for event
 
 DONE 5. Search for events of interest: ​A button search events is located on the home page where if the user clicks it, it will search for groups that have the same interests as you and join that result with the organize and an_event tables to find their respective events.
 
-To do the search:
+When the search for events button is clicked, this query gets all the events that are organized by groups with similar interests as the user.
 'SELECT * FROM interested_in JOIN about ON interested_in.keyword = about.keyword JOIN organize ON about.group_id = organize.group_id JOIN an_event ON organize.event_id = an_event.event_id JOIN a_group ON about.group_id = a_group.group_id WHERE interested_in.username = %s'
 
 
 DONE 6. Create an event​: If the user tries clicks on Create Event from home page and tries to create an event for a group, the query is run and checked if the user is in the group it is making an event for and is authorized to make that event. If so, event is created, else, an error is displayed.
 
-check if user in group & authorized --> SELECT * FROM belongs_to JOIN a_group ON belongs_to.group_id = a_group.group_id where belongs_to.username = %s AND belongs_to.authorized = 1
+check if user in group is authorized --> SELECT * FROM belongs_to JOIN a_group ON belongs_to.group_id = a_group.group_id where belongs_to.username = %s AND belongs_to.authorized = 1
+
+Check to see if the location created by user already exists:
+SELECT * FROM location WHERE location_name = %s AND zipcode = %s
+
+Insert location into location table:
+INSERT INTO location (location_name, zipcode, address, description, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s)'
+
+Insert event into table:
+INSERT INTO an_event (event_id, title, description, start_time, end_time, location_name, zipcode) VALUES (%s, %s, %s, %s, %s, %s, %s);
+
+Insert into organize table:
+INSERT INTO organize (event_id, group_id) VALUES (%s, %s)
 
 DONE 7. Rate an event​ that the user has signed up for and that has already take place.
 
