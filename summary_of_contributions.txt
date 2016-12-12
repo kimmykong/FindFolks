@@ -3,6 +3,10 @@
  Kimberly Phillip:
 
  Shayaan Saiyed:
+ -made create events page and wrote corresponding SQL statements and python functions
+ -made create groups page and wrote corresponding SQL statements and python functions
+ -made search for events button as well wrote corresponding SQL statements and python functions
+ -made table on user’s homepage to show upcoming events the user is signed up for and wrote corresponding SQL statements and python functions
 
  Kristin Moser:
   	-interests: 
